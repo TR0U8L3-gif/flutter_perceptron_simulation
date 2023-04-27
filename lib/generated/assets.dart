@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String dataData = 'assets/data/data.txt';
   static const String imagesPerceptronDark = 'assets/images/perceptron_dark.png';
   static const String imagesPerceptronLight = 'assets/images/perceptron_light.png';
 
