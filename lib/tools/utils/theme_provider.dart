@@ -73,7 +73,7 @@ class ColorProvider{
   }
 
   static const light = Color(0xffF7F0F0);
-  static const yellowLight = Color(0xffFFD899);
+  static const yellowLight = Color(0xffF8C674);
   static const blueLight = Color(0xff8AF3FF);
   static const greenLight = Color(0xff5EE8d8);
 

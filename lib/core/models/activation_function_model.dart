@@ -5,7 +5,6 @@ abstract class ActivationFunction{
   late double? min;
   late double? max;
   late double? results;
-  late String imagePath;
   double calculate(double x);
 }
 
@@ -26,9 +25,6 @@ class StepFunction implements ActivationFunction{
 
   @override
   double? results = 2;
-
-  @override
-  String imagePath = '';
 }
 
 class BipolarStepFunction implements ActivationFunction{
@@ -48,9 +44,6 @@ class BipolarStepFunction implements ActivationFunction{
 
   @override
   double? results = 2;
-
-  @override
-  String imagePath = '';
 }
 
 class SigmoidFunction implements ActivationFunction{
@@ -70,9 +63,6 @@ class SigmoidFunction implements ActivationFunction{
 
   @override
   double? results;
-
-  @override
-  String imagePath = '';
 }
 
 class ReluFunction implements ActivationFunction{
@@ -92,9 +82,6 @@ class ReluFunction implements ActivationFunction{
 
   @override
   double? results;
-
-  @override
-  String imagePath = '';
 }
 
 class TanhFunction implements ActivationFunction{
@@ -124,9 +111,6 @@ class TanhFunction implements ActivationFunction{
 
   @override
   double? results;
-
-  @override
-  String imagePath = '';
 }
 
 class SoftMaxFunction implements ActivationFunction{
@@ -146,7 +130,4 @@ class SoftMaxFunction implements ActivationFunction{
 
   @override
   double? results;
-
-  @override
-  String imagePath = '';
 }
