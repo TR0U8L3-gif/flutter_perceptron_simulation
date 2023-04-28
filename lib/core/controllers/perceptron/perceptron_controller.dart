@@ -3,18 +3,29 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:perceptron_simulation/core/models/activation_function_model.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
+import 'package:perceptron_simulation/core/models/perceptron_model.dart';
 
 class PerceptronController extends GetxController {
+  final Rx<Perceptron?> _perceptron = Rx(null);
   final Rx<bool> _isDataLoading = Rx(false);
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
   final _dataLoadingController = StreamController<String>.broadcast();
 
+  List<List<double>> allInputData = [];
+  List<String> allOutputData = [];
+
+  List<List<double>> trainingInputData = [];
+  List<String> trainingOutputData = [];
+
+  List<List<double>> predictInputData = [];
+  List<String> predictOutputData = [];
+
+  get perceptron => _perceptron.value;
   get isDataLoading => _isDataLoading.value;
-
   get isDataLoaded => _isDataLoaded.value;
-
   get loadingDataLine => _loadingDataLine.value;
 
   void loadExampleData() async {
@@ -39,6 +50,9 @@ class PerceptronController extends GetxController {
 
     //executing data
     int i = 0;
+    List<String> outputData = [];
+    List<List<double>> inputData = [];
+
     await Future.forEach(dataFile, (line) async {
       if (signal == "abort") {
         return;
@@ -56,14 +70,19 @@ class PerceptronController extends GetxController {
         List<String> inputNames = data.getRange(0, data.length - 1).toList();
         debugPrint(
             "$inputsNumber inputNames: $inputNames, outputName: $outputName");
+        _perceptron.value = Perceptron(
+            inputsNumber: inputsNumber,
+            learningRate: 0.1,
+            activationFunction: SigmoidFunction())
+          ..initialize(inputNames: inputNames, outputName: outputName);
       }
 
       //other lines are perceptron learning data
       else {
-        //TODO: all -> model of Perceptron and Nodes
         String output = data[data.length - 1];
         List<String> input = data.getRange(0, data.length - 1).toList();
-        debugPrint("$i: $input -> $output");
+        outputData.add(output);
+        inputData.add(input.map((source) => double.parse(source)).toList());
       }
 
       //increment line number
@@ -76,12 +95,19 @@ class PerceptronController extends GetxController {
     listener.cancel();
 
     // return if aborted loading data
-    if (signal == "abort") return;
+    if (signal == "abort") {
+      loadDataCancel();
+      return;
+    }
 
     //everything goes well :)
     _isDataLoaded.value = true;
     _isDataLoading.value = false;
     _dataLoadingController.add("done");
+    allOutputData = outputData;
+    allInputData = inputData;
+
+    debugPrint("input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
   }
 
   void loadDataCancel() async {
@@ -89,8 +115,11 @@ class PerceptronController extends GetxController {
       debugPrint("abort loading example file");
       _dataLoadingController.add("abort");
     }
+    _perceptron.value = null;
     _loadingDataLine.value = "...";
     _isDataLoading.value = false;
     _isDataLoaded.value = false;
+    allOutputData = [];
+    allInputData = [];
   }
 }
