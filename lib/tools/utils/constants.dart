@@ -6,6 +6,7 @@ import 'package:perceptron_simulation/core/controllers/routes/route_controller.d
 var routeController = RouteController.instance;
 
 //Durations
+const Duration duration50 = Duration(milliseconds: 50);
 const Duration duration200 = Duration(milliseconds: 200);
 const Duration duration400 = Duration(milliseconds: 400);
 const Duration duration600 = Duration(milliseconds: 600);

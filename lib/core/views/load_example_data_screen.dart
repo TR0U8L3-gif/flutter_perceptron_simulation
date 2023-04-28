@@ -26,7 +26,7 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
     final size = MediaQuery.of(context).size;
     return Obx(() {
       return WillPopScope(
-        onWillPop:  () async => false,
+        onWillPop: () async => false,
         child: Scaffold(
           body: Center(
             child: SingleChildScrollView(
@@ -83,20 +83,29 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                               )
                             ],
                           ),
-                    const SizedBox(
-                      height: 64,
-                    ),
+                    perceptronController.isDataLoading
+                        ? Container(
+                            height: 64,
+                            width: size.width,
+                            padding: const EdgeInsets.all(8),
+                            alignment: Alignment.topCenter,
+                            child: Text(perceptronController.loadingDataLine, overflow: TextOverflow.ellipsis,),
+                          )
+                        : const SizedBox(
+                            height: 64,
+                          ),
                     Opacity(
                       opacity: 0.9,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         height: 48,
                         width: double.infinity,
                         alignment: Alignment.bottomCenter,
                         child: AnimatedCrossFade(
                           firstChild: const Text(
                             "Data has been loaded!!!",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 20),
                             textAlign: TextAlign.center,
                           ),
                           secondChild: const Text(
@@ -117,7 +126,7 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                     InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(32)),
                       onTap: () {
-                        perceptronController.loadExampleDataCancel();
+                        perceptronController.loadDataCancel();
                         Get.back(closeOverlays: true);
                       },
                       child: Row(
@@ -125,8 +134,12 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                         children: [
                           AnimatedContainer(
                             width: perceptronController.isDataLoaded
-                                ? (size.width - min(size.width, size.height) * 0.2) - 48 - 12
-                                : (size.width - min(size.width, size.height) * 0.2),
+                                ? (size.width -
+                                        min(size.width, size.height) * 0.2) -
+                                    48 -
+                                    12
+                                : (size.width -
+                                    min(size.width, size.height) * 0.2),
                             height: 48,
                             decoration: BoxDecoration(
                               borderRadius:
@@ -149,27 +162,26 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                             ),
                           ),
                           AnimatedContainer(
-                              width: perceptronController.isDataLoaded
-                                  ? 8
-                                  : 0,
+                              width: perceptronController.isDataLoaded ? 8 : 0,
                               duration: duration400),
                           AnimatedContainer(
-                              width: perceptronController.isDataLoaded
-                                  ? 48
-                                  : 0,
+                              width: perceptronController.isDataLoaded ? 48 : 0,
                               height: 48,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
+                                    const BorderRadius.all(Radius.circular(32)),
                                 color: ColorProvider.isThemeDark(context)
                                     ? ColorProvider.yellowDark
                                     : ColorProvider.yellowLight,
                               ),
                               alignment: Alignment.center,
                               duration: duration600,
-                              child: Icon(Icons.check, color: ColorProvider.isThemeDark(context)
-                                  ? ColorProvider.dark
-                                  : ColorProvider.light,)),
+                              child: Icon(
+                                Icons.check,
+                                color: ColorProvider.isThemeDark(context)
+                                    ? ColorProvider.dark
+                                    : ColorProvider.light,
+                              )),
                         ],
                       ),
                     ),
