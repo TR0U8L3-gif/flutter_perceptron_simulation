@@ -1,14 +1,19 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:perceptron_simulation/core/controllers/perceptron/perceptron_controller.dart';
+import 'package:perceptron_simulation/core/controllers/perceptron/simulation_controller.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/tools/utils/theme_provider.dart';
 import 'package:perceptron_simulation/tools/widgets/app_bar_widget.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
 
-  final PerceptronController perceptronController = Get.put(PerceptronController());
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final SimulationController perceptronController = Get.put(SimulationController());
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +70,10 @@ class MainScreen extends StatelessWidget {
                 ),
                 InkWell(
                   borderRadius: const BorderRadius.all(Radius.circular(32)),
-                  onTap: () => Get.toNamed(routeController.getLoadExampleDataRoute),
+                  onTap: () {
+                    if(!mounted) return;
+                    Get.toNamed(routeController.getLoadExampleDataRoute);
+                  },
                   child: Container(
                     width: double.infinity,
                     height: 48,
@@ -92,17 +100,21 @@ class MainScreen extends StatelessWidget {
                 InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  onTap: () => Get.toNamed(routeController.getInfoRoute),
-                  child: Opacity(
+                  onTap: () {
+                      if(!mounted) return;
+                      Get.toNamed(routeController.getInfoRoute);
+                    },
+                    child: Opacity(
                     opacity: 0.8,
                     child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(fontSize: 14, color: ColorProvider.isThemeDark(context) ? ColorProvider.light : ColorProvider.dark),
-                          children:  [
-                            const TextSpan( text: "What should the perceptron learning data file look like? "),
-                            TextSpan( text: "Click here to find out!", style:  TextStyle( fontWeight: FontWeight.bold, color: ColorProvider.isThemeDark(context) ? ColorProvider.yellowLight : ColorProvider.yellowDark,),),
+                    padding: const EdgeInsets.all(16),
+                    child: RichText(
+                    text: TextSpan(
+                    style: TextStyle(fontSize: 14, color: ColorProvider.isThemeDark(context) ? ColorProvider.light : ColorProvider.dark),
+                    children:  [
+                    const TextSpan( text: "What should the perceptron learning data file look like? "),
+                    TextSpan( text: "Click here to find out!", style:  TextStyle( fontWeight: FontWeight.bold, color: ColorProvider.
+                  isThemeDark(context) ? ColorProvider.yellowLight : ColorProvider.yellowDark,),),
                           ],
                         ),
                         textAlign: TextAlign.center,

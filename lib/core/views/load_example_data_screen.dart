@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:perceptron_simulation/core/controllers/perceptron/perceptron_controller.dart';
+import 'package:perceptron_simulation/core/controllers/perceptron/simulation_controller.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/tools/utils/theme_provider.dart';
 import 'package:perceptron_simulation/tools/widgets/app_bar_widget.dart';
@@ -13,12 +13,12 @@ class LoadExampleDataScreen extends StatefulWidget {
 }
 
 class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
-  final PerceptronController perceptronController = Get.find();
+  final SimulationController simulationController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    perceptronController.loadExampleData();
+    simulationController.loadExampleData();
   }
 
   @override
@@ -35,7 +35,7 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    perceptronController.isDataLoaded
+                    simulationController.isDataLoaded
                         ? TweenAnimationBuilder(
                             tween: Tween<double>(begin: 0, end: 1),
                             duration: duration1200,
@@ -72,7 +72,7 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                                       ? ColorProvider.light
                                       : ColorProvider.dark,
                                   strokeWidth: 8,
-                                  value: perceptronController.isDataLoading
+                                  value: simulationController.isDataLoading
                                       ? null
                                       : 0,
                                 ),
@@ -83,13 +83,13 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                               )
                             ],
                           ),
-                    perceptronController.isDataLoading
+                    simulationController.isDataLoading
                         ? Container(
                             height: 64,
                             width: size.width,
                             padding: const EdgeInsets.all(8),
                             alignment: Alignment.topCenter,
-                            child: Text(perceptronController.loadingDataLine, overflow: TextOverflow.ellipsis,),
+                            child: Text(simulationController.loadingDataLine, overflow: TextOverflow.ellipsis,),
                           )
                         : const SizedBox(
                             height: 64,
@@ -113,7 +113,7 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.center,
                           ),
-                          crossFadeState: perceptronController.isDataLoaded
+                          crossFadeState: simulationController.isDataLoaded
                               ? CrossFadeState.showFirst
                               : CrossFadeState.showSecond,
                           duration: duration600,
@@ -123,17 +123,17 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    InkWell(
-                      borderRadius: const BorderRadius.all(Radius.circular(32)),
-                      onTap: () {
-                        perceptronController.loadDataCancel();
-                        Get.back(closeOverlays: true);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            width: perceptronController.isDataLoaded
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          borderRadius: const BorderRadius.all(Radius.circular(32)),
+                          onTap: () {
+                            simulationController.cancel();
+                            Get.offAllNamed(routeController.getMainRoute);
+                          },
+                          child: AnimatedContainer(
+                            width: simulationController.isDataLoaded
                                 ? (size.width -
                                         min(size.width, size.height) * 0.2) -
                                     48 -
@@ -161,11 +161,17 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                               ),
                             ),
                           ),
-                          AnimatedContainer(
-                              width: perceptronController.isDataLoaded ? 8 : 0,
-                              duration: duration400),
-                          AnimatedContainer(
-                              width: perceptronController.isDataLoaded ? 48 : 0,
+                        ),
+                        AnimatedContainer(
+                            width: simulationController.isDataLoaded ? 8 : 0,
+                            duration: duration400),
+                        InkWell(
+                          borderRadius: const BorderRadius.all(Radius.circular(32)),
+                          onTap: () {
+                            Get.toNamed(routeController.getDataSplittingRoute);
+                          },
+                          child: AnimatedContainer(
+                              width: simulationController.isDataLoaded ? 48 : 0,
                               height: 48,
                               decoration: BoxDecoration(
                                 borderRadius:
@@ -182,8 +188,8 @@ class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
                                     ? ColorProvider.dark
                                     : ColorProvider.light,
                               )),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

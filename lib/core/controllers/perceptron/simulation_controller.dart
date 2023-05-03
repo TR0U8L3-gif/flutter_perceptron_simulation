@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,8 +8,9 @@ import 'package:perceptron_simulation/core/models/activation_function_model.dart
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/core/models/perceptron_model.dart';
 
-class PerceptronController extends GetxController {
+class SimulationController extends GetxController {
   final Rx<Perceptron?> _perceptron = Rx(null);
+
   final Rx<bool> _isDataLoading = Rx(false);
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
@@ -16,21 +18,25 @@ class PerceptronController extends GetxController {
 
   List<List<double>> allInputData = [];
   List<String> allOutputData = [];
+  final Rx<List<List<double>>> _trainingInputData = Rx([]);
+  final Rx<List<String>> _trainingOutputData = Rx([]);
+  final Rx<List<List<double>>> _predictInputData = Rx([]);
+  final Rx<List<String>> _predictOutputData = Rx([]);
 
-  List<List<double>> trainingInputData = [];
-  List<String> trainingOutputData = [];
+  Perceptron? get perceptron => _perceptron.value;
 
-  List<List<double>> predictInputData = [];
-  List<String> predictOutputData = [];
+  bool get isDataLoading => _isDataLoading.value;
+  bool get isDataLoaded => _isDataLoaded.value;
+  String get loadingDataLine => _loadingDataLine.value;
 
-  get perceptron => _perceptron.value;
-  get isDataLoading => _isDataLoading.value;
-  get isDataLoaded => _isDataLoaded.value;
-  get loadingDataLine => _loadingDataLine.value;
+  List<List<double>> get trainingInputData => _trainingInputData.value;
+  List<String> get trainingOutputData => _trainingOutputData.value;
+  List<List<double>> get predictInputData => _predictInputData.value;
+  List<String> get predictOutputData => _predictOutputData.value;
 
   void loadExampleData() async {
     //clear data before start
-    loadDataCancel();
+    cancel();
 
     //start loading
     String signal = "pending";
@@ -96,7 +102,7 @@ class PerceptronController extends GetxController {
 
     // return if aborted loading data
     if (signal == "abort") {
-      loadDataCancel();
+      cancel();
       return;
     }
 
@@ -110,16 +116,73 @@ class PerceptronController extends GetxController {
     debugPrint("input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
   }
 
-  void loadDataCancel() async {
+  void cancel() async {
     if (_isDataLoading.value) {
       debugPrint("abort loading example file");
       _dataLoadingController.add("abort");
     }
     _perceptron.value = null;
+
     _loadingDataLine.value = "...";
     _isDataLoading.value = false;
     _isDataLoaded.value = false;
+
     allOutputData = [];
     allInputData = [];
+    _trainingInputData.value = [];
+    _trainingOutputData.value = [];
+    _predictInputData.value = [];
+    _predictOutputData.value = [];
   }
+
+  void clearSets(){
+    _trainingInputData.value = [];
+    _trainingOutputData.value = [];
+    _predictInputData.value = [];
+    _predictOutputData.value = [];
+  }
+
+  void randomizeSets({required int percentage}){
+    if(percentage <= 0 || percentage >= 100){
+      Get.snackbar("Data separation failed", "The selected percentage: $percentage% is invalid");
+      return;
+    }
+    int allData = allOutputData.length;
+    int percentageData = allData * percentage ~/ 100;
+    if(percentageData == 0){
+      Get.snackbar("Data separation failed", "The selected percentage from $allData data is zero");
+      return;
+    }
+
+    clearSets();
+
+    List<int> indexes = [];
+    for(int i = 0; i < allData; i++){
+      indexes.add(i);
+    }
+
+    debugPrint("${indexes.length} / $allData / $percentageData $percentage%");
+
+    final random = Random();
+    Set<int> selectedNumbers = <int>{};
+    while (selectedNumbers.length < percentageData) {
+      selectedNumbers.add(indexes[random.nextInt(indexes.length)]);
+    }
+
+    debugPrint("${selectedNumbers.toList()}");
+
+    for(int i = 0; i < allData; i++){
+      if(selectedNumbers.contains(i)){
+        //go to training data
+        _trainingInputData.value.add(allInputData[i]);
+        _trainingOutputData.value.add(allOutputData[i]);
+      }
+      else{
+        //go to test data
+        _predictInputData.value.add(allInputData[i]);
+        _predictOutputData.value.add(allOutputData[i]);
+      }
+    }
+  }
+
 }
