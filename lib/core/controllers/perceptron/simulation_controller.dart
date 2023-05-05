@@ -11,10 +11,10 @@ import 'package:perceptron_simulation/core/models/perceptron_model.dart';
 class SimulationController extends GetxController {
   final Rx<Perceptron?> _perceptron = Rx(null);
 
+  final _dataLoadingController = StreamController<String>.broadcast();
   final Rx<bool> _isDataLoading = Rx(false);
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
-  final _dataLoadingController = StreamController<String>.broadcast();
 
   List<List<double>> allInputData = [];
   List<String> allOutputData = [];
@@ -26,13 +26,37 @@ class SimulationController extends GetxController {
   Perceptron? get perceptron => _perceptron.value;
 
   bool get isDataLoading => _isDataLoading.value;
+
   bool get isDataLoaded => _isDataLoaded.value;
+
   String get loadingDataLine => _loadingDataLine.value;
 
   List<List<double>> get trainingInputData => _trainingInputData.value;
+
   List<String> get trainingOutputData => _trainingOutputData.value;
+
   List<List<double>> get predictInputData => _predictInputData.value;
+
   List<String> get predictOutputData => _predictOutputData.value;
+
+  void cancel() async {
+    if (_isDataLoading.value) {
+      debugPrint("abort loading example file");
+      _dataLoadingController.add("abort");
+    }
+    _perceptron.value = null;
+
+    _loadingDataLine.value = "...";
+    _isDataLoading.value = false;
+    _isDataLoaded.value = false;
+
+    allOutputData = [];
+    allInputData = [];
+    _trainingInputData.value = [];
+    _trainingOutputData.value = [];
+    _predictInputData.value = [];
+    _predictOutputData.value = [];
+  }
 
   void loadExampleData() async {
     //clear data before start
@@ -95,7 +119,7 @@ class SimulationController extends GetxController {
       i++;
 
       //delay for visual effect
-      await Future.delayed(duration50);
+      await Future.delayed(duration15);
     });
     // cancel listener
     listener.cancel();
@@ -113,51 +137,35 @@ class SimulationController extends GetxController {
     allOutputData = outputData;
     allInputData = inputData;
 
-    debugPrint("input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
+    debugPrint(
+        "input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
   }
 
-  void cancel() async {
-    if (_isDataLoading.value) {
-      debugPrint("abort loading example file");
-      _dataLoadingController.add("abort");
-    }
-    _perceptron.value = null;
-
-    _loadingDataLine.value = "...";
-    _isDataLoading.value = false;
-    _isDataLoaded.value = false;
-
-    allOutputData = [];
-    allInputData = [];
+  void clearSets() {
     _trainingInputData.value = [];
     _trainingOutputData.value = [];
     _predictInputData.value = [];
     _predictOutputData.value = [];
   }
 
-  void clearSets(){
-    _trainingInputData.value = [];
-    _trainingOutputData.value = [];
-    _predictInputData.value = [];
-    _predictOutputData.value = [];
-  }
-
-  void randomizeSets({required int percentage}){
-    if(percentage <= 0 || percentage >= 100){
-      Get.snackbar("Data separation failed", "The selected percentage: $percentage% is invalid");
+  void randomizeSets({required int percentage}) {
+    if (percentage <= 0 || percentage >= 100) {
+      Get.snackbar("Data separation failed",
+          "The selected percentage: $percentage% is invalid");
       return;
     }
     int allData = allOutputData.length;
     int percentageData = allData * percentage ~/ 100;
-    if(percentageData == 0){
-      Get.snackbar("Data separation failed", "The selected percentage from $allData data is zero");
+    if (percentageData == 0) {
+      Get.snackbar("Data separation failed",
+          "The selected percentage from $allData data inputs is zero");
       return;
     }
 
     clearSets();
 
     List<int> indexes = [];
-    for(int i = 0; i < allData; i++){
+    for (int i = 0; i < allData; i++) {
       indexes.add(i);
     }
 
@@ -171,13 +179,12 @@ class SimulationController extends GetxController {
 
     debugPrint("${selectedNumbers.toList()}");
 
-    for(int i = 0; i < allData; i++){
-      if(selectedNumbers.contains(i)){
+    for (int i = 0; i < allData; i++) {
+      if (selectedNumbers.contains(i)) {
         //go to training data
         _trainingInputData.value.add(allInputData[i]);
         _trainingOutputData.value.add(allOutputData[i]);
-      }
-      else{
+      } else {
         //go to test data
         _predictInputData.value.add(allInputData[i]);
         _predictOutputData.value.add(allOutputData[i]);
@@ -185,4 +192,40 @@ class SimulationController extends GetxController {
     }
   }
 
+  void setActivationFunction({required ActivationFunction activationFunction}) {
+    if (_trainingInputData.value.isEmpty) {
+      cancel();
+      Get.toNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "Test data set is empty");
+      return;
+    }
+    if (_perceptron.value == null) {
+      cancel();
+      Get.toNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "The perceptron has not been initialized");
+      return;
+    }
+
+    _perceptron.value!.activationFunction = activationFunction;
+  }
+
+  void setLearningRate({required double learningRate}){
+    if (_trainingInputData.value.isEmpty) {
+      cancel();
+      Get.toNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "Test data set is empty");
+      return;
+    }
+    if (_perceptron.value == null) {
+      cancel();
+      Get.toNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "The perceptron has not been initialized");
+      return;
+    }
+    if (learningRate <= 0) {
+      Get.snackbar("Something went wrong", "The perceptron has not been initialized");
+      return;
+    }
+    _perceptron.value!.learningRate = learningRate;
+  }
 }

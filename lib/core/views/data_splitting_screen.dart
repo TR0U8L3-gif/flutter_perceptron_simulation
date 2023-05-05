@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
@@ -38,7 +37,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         const Text(
-                          "Separating the data into training and testing sets",
+                          "Separating data into training and testing sets",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
@@ -276,7 +275,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(32)),
                               onTap: () {
-                                //TODO: chose activation function
+                                Get.toNamed(routeController.getPerceptronEditorRoute);
                               },
                               child: AnimatedContainer(
                                   width: (simulationController
@@ -308,7 +307,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                     ),
                   ),
                   const Text(
-                    "Data:",
+                    "Separated data:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -322,7 +321,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Training Data:",
+                            "Training set:",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w400),
                           ),
@@ -358,7 +357,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Test Data:",
+                            "Test set:",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w400),
                           ),

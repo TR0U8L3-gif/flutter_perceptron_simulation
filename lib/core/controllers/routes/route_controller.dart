@@ -3,6 +3,7 @@ import 'package:perceptron_simulation/core/views/data_info_screen.dart';
 import 'package:perceptron_simulation/core/views/data_splitting_screen.dart';
 import 'package:perceptron_simulation/core/views/load_example_data_screen.dart';
 import 'package:perceptron_simulation/core/views/main_screen.dart';
+import 'package:perceptron_simulation/core/views/perceptron_editor_screen.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 
 
@@ -14,12 +15,14 @@ class RouteController extends GetxController {
   static const String _dataInfoRoute = "/info";
   static const String _loadExampleDataRoute = "/loadExampleData";
   static const String _dataSplittingRoute = "/dataSplitting";
+  static const String _perceptronEditorRoute = "/perceptronEditor";
 
   //init route
   String get getMainRoute => _mainRoute;
   String get getInfoRoute => _dataInfoRoute;
   String get getLoadExampleDataRoute => _loadExampleDataRoute;
   String get getDataSplittingRoute=> _dataSplittingRoute;
+  String get getPerceptronEditorRoute=> _perceptronEditorRoute;
 
   List<GetPage> routes = [
     GetPage(
@@ -43,6 +46,12 @@ class RouteController extends GetxController {
     GetPage(
       name: _dataSplittingRoute,
       page: () => const DataSplittingScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: duration400,
+    ),
+    GetPage(
+      name: _perceptronEditorRoute,
+      page: () => const PerceptronEditorScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: duration400,
     ),

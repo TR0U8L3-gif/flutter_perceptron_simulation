@@ -6,6 +6,7 @@ import 'package:perceptron_simulation/core/controllers/routes/route_controller.d
 var routeController = RouteController.instance;
 
 //Durations
+const Duration duration15 = Duration(milliseconds: 15);
 const Duration duration50 = Duration(milliseconds: 50);
 const Duration duration200 = Duration(milliseconds: 200);
 const Duration duration400 = Duration(milliseconds: 400);
@@ -95,4 +96,9 @@ num min<T extends num>(T a, T b){
 
 num max<T extends num>(T a, T b){
   return a > b ? a : b;
+}
+
+double roundDouble(double value, int places){
+  num mod = pow(10.0, places);
+  return ((value * mod).round().toDouble() / mod);
 }
