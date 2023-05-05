@@ -6,7 +6,7 @@ import 'package:perceptron_simulation/tools/utils/theme_provider.dart';
 import 'package:perceptron_simulation/tools/widgets/app_bar_widget.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({Key? key}) : super(key: key);
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
