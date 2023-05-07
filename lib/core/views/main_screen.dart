@@ -13,7 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final SimulationController perceptronController = Get.put(SimulationController());
+  final SimulationController simulationController = Get.put(SimulationController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +46,29 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(
                   height: 8,
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(32)),
-                    color: ColorProvider.isThemeDark(context)
-                        ? ColorProvider.light
-                        : ColorProvider.dark,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "load data from file",
-                    style: TextStyle(
-                      color: ColorProvider.isThemeDark(context) ? ColorProvider.yellowDark : ColorProvider.yellowLight,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(32)),
+                  onTap: () {
+                    if(!mounted) return;
+                    simulationController.pickFileData();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(32)),
+                      color: ColorProvider.isThemeDark(context)
+                          ? ColorProvider.light
+                          : ColorProvider.dark,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "load data from file",
+                      style: TextStyle(
+                        color: ColorProvider.isThemeDark(context) ? ColorProvider.yellowDark : ColorProvider.yellowLight,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -72,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(32)),
                   onTap: () {
                     if(!mounted) return;
-                    Get.toNamed(routeController.getLoadExampleDataRoute);
+                    simulationController.loadExampleData();
                   },
                   child: Container(
                     width: double.infinity,

@@ -5,21 +5,10 @@ import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/tools/utils/theme_provider.dart';
 import 'package:perceptron_simulation/tools/widgets/app_bar_widget.dart';
 
-class LoadExampleDataScreen extends StatefulWidget {
-  const LoadExampleDataScreen({Key? key}) : super(key: key);
+class LoadDataScreen extends StatelessWidget {
+  LoadDataScreen({Key? key}) : super(key: key);
 
-  @override
-  State<LoadExampleDataScreen> createState() => _LoadExampleDataScreenState();
-}
-
-class _LoadExampleDataScreenState extends State<LoadExampleDataScreen> {
   final SimulationController simulationController = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    simulationController.loadExampleData();
-  }
 
   @override
   Widget build(BuildContext context) {
