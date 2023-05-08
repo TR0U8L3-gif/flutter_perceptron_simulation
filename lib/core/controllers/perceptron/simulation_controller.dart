@@ -11,13 +11,15 @@ import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/core/models/perceptron_model.dart';
 
 class SimulationController extends GetxController {
-  final Rx<Perceptron?> _perceptron = Rx(null);
 
+  //init
+  final Rx<Perceptron?> _perceptron = Rx(null);
   final _dataLoadingController = StreamController<String>.broadcast();
   final Rx<bool> _isDataLoading = Rx(false);
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
 
+  //data sets
   List<List<double>> allInputData = [];
   List<String> allOutputData = [];
   final Rx<List<List<double>>> _trainingInputData = Rx([]);
@@ -25,22 +27,26 @@ class SimulationController extends GetxController {
   final Rx<List<List<double>>> _predictInputData = Rx([]);
   final Rx<List<String>> _predictOutputData = Rx([]);
 
+  //simulation
+  final Rx<bool> _isSimulationPlaying = Rx(false);
+
+  //init
   Perceptron? get perceptron => _perceptron.value;
-
   bool get isDataLoading => _isDataLoading.value;
-
   bool get isDataLoaded => _isDataLoaded.value;
-
   String get loadingDataLine => _loadingDataLine.value;
 
+  //data sets
   List<List<double>> get trainingInputData => _trainingInputData.value;
-
   List<String> get trainingOutputData => _trainingOutputData.value;
-
   List<List<double>> get predictInputData => _predictInputData.value;
-
   List<String> get predictOutputData => _predictOutputData.value;
 
+  //simulation
+  bool get isSimulationPlaying => _isSimulationPlaying.value;
+
+
+  //loading data
   void cancel() async {
     if (_isDataLoading.value) {
       debugPrint("abort loading example file");
@@ -59,7 +65,6 @@ class SimulationController extends GetxController {
     _predictInputData.value = [];
     _predictOutputData.value = [];
   }
-
   void loadExampleData() async {
     try {
       //clear data before start
@@ -153,7 +158,6 @@ class SimulationController extends GetxController {
       return;
     }
   }
-
   void pickFileData() async {
     //picking file from device
     final result = await FilePicker.platform.pickFiles();
@@ -336,13 +340,13 @@ class SimulationController extends GetxController {
     }
   }
 
+  //data sets randomize
   void clearSets() {
     _trainingInputData.value = [];
     _trainingOutputData.value = [];
     _predictInputData.value = [];
     _predictOutputData.value = [];
   }
-
   void randomizeSets({required int percentage}) {
     if (percentage <= 0 || percentage >= 100) {
       Get.snackbar("Data separation failed",
@@ -387,6 +391,7 @@ class SimulationController extends GetxController {
     }
   }
 
+  //perceptron editor
   void setActivationFunction({required ActivationFunction activationFunction}) {
     if (_trainingInputData.value.isEmpty) {
       cancel();
@@ -404,7 +409,6 @@ class SimulationController extends GetxController {
 
     _perceptron.value!.activationFunction = activationFunction;
   }
-
   void setLearningRate({required double learningRate}) {
     if (_trainingInputData.value.isEmpty) {
       cancel();
@@ -425,5 +429,22 @@ class SimulationController extends GetxController {
       return;
     }
     _perceptron.value!.learningRate = learningRate;
+  }
+
+  //simulation
+  void initSimulation(){
+    _isSimulationPlaying.value = false;
+    //TODO: setData and convert string values to doubles
+  }
+  void startSimulation(){
+    _isSimulationPlaying.value = true;
+  }
+  void stopSimulation(){
+    _isSimulationPlaying.value = false;
+  }
+  void restartSimulation(){
+    _isSimulationPlaying.value = false;
+    if(_perceptron.value == null) return;
+    _perceptron.value!.resetData();
   }
 }
