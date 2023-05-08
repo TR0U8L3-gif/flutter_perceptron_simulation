@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.perceptron_simulation">
    <application
-        android:label="perceptron_simulation"
+        android:label="Perceptron Simulation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
