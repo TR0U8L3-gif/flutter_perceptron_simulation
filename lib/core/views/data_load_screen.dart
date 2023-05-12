@@ -32,20 +32,29 @@ class LoadDataScreen extends StatelessWidget {
                               return Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  SizedBox(
-                                    width: size.width * 0.56,
-                                    height: size.width * 0.56,
-                                    child: CircularProgressIndicator(
-                                      color: ColorProvider.isThemeDark(context)
-                                          ? ColorProvider.yellowDark
-                                          : ColorProvider.yellowLight,
-                                      strokeWidth: 8,
-                                      value: value,
+                                  IgnorePointer(
+                                    child: SizedBox(
+                                      width: size.width * 0.56,
+                                      height: size.width * 0.56,
+                                      child: CircularProgressIndicator(
+                                        color: ColorProvider.isThemeDark(context)
+                                            ? ColorProvider.yellowDark
+                                            : ColorProvider.yellowLight,
+                                        strokeWidth: 8,
+                                        value: value,
+                                      ),
                                     ),
                                   ),
                                   Icon(
                                     Icons.file_copy,
                                     size: size.width * 0.16,
+                                    color: simulationController.isFastLoading
+                                        ? ColorProvider.isThemeDark(context)
+                                          ? ColorProvider.yellowDark
+                                          : ColorProvider.yellowLight
+                                        : ColorProvider.isThemeDark(context)
+                                          ? ColorProvider.light
+                                          : ColorProvider.dark,
                                   )
                                 ],
                               );
@@ -66,9 +75,20 @@ class LoadDataScreen extends StatelessWidget {
                                       : 0,
                                 ),
                               ),
-                              Icon(
-                                Icons.file_copy,
-                                size: size.width * 0.16,
+                              InkWell(
+                                onTap: () => simulationController.turnOnFastLoading(),
+                                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                child: Icon(
+                                  Icons.file_copy,
+                                  size: size.width * 0.16,
+                                  color: simulationController.isFastLoading
+                                      ? ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.yellowDark
+                                      : ColorProvider.yellowLight
+                                      : ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark,
+                                ),
                               )
                             ],
                           ),

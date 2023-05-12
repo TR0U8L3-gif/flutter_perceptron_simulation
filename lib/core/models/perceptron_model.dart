@@ -21,9 +21,8 @@ class Perceptron {
   List<List<double>> trainingInputData = [];
   List<double> testingOutputData = [];
   List<List<double>> testingInputData = [];
+
   //simulation
-  double milliSeconds = 10;
-  double simulationSpeed = 1;
   List<FlSpot> errorCharPoints = [];
   bool isInitialized = false;
   bool isLearning = true;
@@ -97,60 +96,10 @@ class Perceptron {
     }
   }
 
-
-  void trainEpoch ({required int epochs}) async {
-    if (weights.isEmpty || inputs.isEmpty || output == null) return;
-
-    List<double> perceptronInputs = [];
-    double perceptronOutput = 0;
-    double correctOutput = 0;
-
-    int epoch = errorCharPoints.length;
-    double globalError;
-
-    do {
-      globalError = 0;
-      for (int i = 0; i < trainingInputData.length; i++) {
-
-        //reading data
-        perceptronInputs = trainingInputData[i];
-        correctOutput = trainingOutputData[i];
-
-        //calculating weight sum
-        double weightSum = 0;
-        for (int weightNumber = 0; weightNumber < inputsNumber; weightNumber++) {
-          weightSum += perceptronInputs[weightNumber] * weights[weightNumber];
-        }
-
-        //calculate predicted output
-        perceptronOutput = activationFunction.calculate(weightSum + _bias);
-
-        //calculate error
-        double error = correctOutput - perceptronOutput;
-        globalError += error * error;
-        addChartErrorPoint(globalError);
-
-        //update weights if outputs are different
-        if (correctOutput != perceptronOutput) updateWeights(error: error);
-
-        //update inputs and output
-        output!.value = perceptronOutput;
-        for(int index = 0; index < inputsNumber; index++){
-          inputs[index].value = perceptronInputs[index];
-        }
-
-        //delay
-        if(simulationSpeed > 0){
-          await Future.delayed(Duration(milliseconds: milliSeconds~/simulationSpeed));
-        }
-      }
-      epoch++;
-
-      debugPrint("Epoch $epoch, weights ${weightsToString()}, global error: $globalError");
-    } while (globalError > 0.001 && epoch < epochs);// Stopping criteria can be adjusted
-
-    if(globalError > 0.001 && epoch < epochs){
-      isLearning = false;
+  //TODO: one epoch train function that works
+  void train(){
+    for(Input inp in inputs){
+      inp.value ++;
     }
   }
 
@@ -162,17 +111,41 @@ class Perceptron {
     return activationFunction.calculate(weightSum + _bias);
   }
 
-  //simulation
   void resetData(){
 
     weights = [];
     _bias = 0.0;
 
-    simulationSpeed = 1;
     errorCharPoints = [];
     isLearning = true;
     isTesting = true;
 
+    for(Input input in inputs){
+      input.value = 0;
+    }
+
+    if(output != null){
+      output!.value = 0;
+    }
+
     generateRandomWeights();
+  }
+
+  @override
+  String toString() {
+    String result = "Perceptron\n";
+    for(Input input in inputs){
+      result += "Input[${input.name}]: ${input.value}\n";
+    }
+    for(int i = 0; i < weights.length; i++){
+      result += "Weight[${i+1}]: ${weights[i]}\n";
+    }
+    if(output != null){
+      result += "Output[${output!.name}]: ${output!.value}\n";
+    }
+    result += "Epoch: ${errorCharPoints.length}\n";
+    result += "isLearning: $isLearning\n";
+    result += "isTesting: $isTesting\n";
+    return result;
   }
 }

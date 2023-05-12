@@ -5,6 +5,11 @@ import 'package:perceptron_simulation/core/controllers/routes/route_controller.d
 //Initialization
 var routeController = RouteController.instance;
 
+//Duration double
+double smallDelay = 10;
+double mediumDelay = 100;
+double largeDelay = 500;
+
 //Durations
 const Duration duration15 = Duration(milliseconds: 15);
 const Duration duration50 = Duration(milliseconds: 50);

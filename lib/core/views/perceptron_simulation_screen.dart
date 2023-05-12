@@ -22,6 +22,7 @@ class _PerceptronSimulationScreenState
     if (simulationController.perceptron == null) {
       Get.offAllNamed(routeController.getMainRoute);
     }
+    simulationController.initSimulation();
     super.initState();
   }
 
@@ -135,7 +136,7 @@ class _PerceptronSimulationScreenState
                                 width: 64,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "x${simulationController.perceptron!.simulationSpeed.toStringAsFixed(1)}",
+                                  "x${simulationController.simulationSpeed.toStringAsFixed(1)}",
                                   style: const TextStyle(fontSize: 24),
                                 )),
                             Expanded(
@@ -149,9 +150,9 @@ class _PerceptronSimulationScreenState
                                   ColorProvider.isThemeDark(context)
                                       ? ColorProvider.yellowDark
                                       : ColorProvider.yellowLight,
-                                  value: simulationController.perceptron!.simulationSpeed.toDouble(),
+                                  value: simulationController.simulationSpeed.toDouble(),
                                   onChanged: (double value) => setState(() {
-                                    simulationController.perceptron!.simulationSpeed = roundDouble(value, 1);
+                                    simulationController..simulationSpeed = roundDouble(value, 1);
                                   }),
                                 ),
                               ),
@@ -171,42 +172,57 @@ class _PerceptronSimulationScreenState
                         InkWell(
                           borderRadius:
                           const BorderRadius.all(Radius.circular(32)),
-                          onTap: () {},
-                          child: Container(
-                              height: 36,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
-                                color: (ColorProvider.isThemeDark(context)
-                                    ? ColorProvider.light
-                                    : ColorProvider.dark)
-                                    .withOpacity(0.24),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text("add next epoch")),
+                          onTap: () {
+                            if(simulationController.perceptron == null) return;
+                            if(simulationController.isSimulationPlaying) return;
+                            simulationController.trainEpoch(epochs: 1);
+                          },
+                          child: Opacity(
+                            opacity: simulationController.isSimulationPlaying ? 0.5 : 1,
+                            child: Container(
+                                height: 36,
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                                  color: (ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark)
+                                      .withOpacity(0.24),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text("add next epoch")),
+                          ),
                         ),
                         InkWell(
                           borderRadius:
                           const BorderRadius.all(Radius.circular(32)),
-                          onTap: () {},
-                          child: Container(
-                              height: 36,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
-                                color: (ColorProvider.isThemeDark(context)
-                                    ? ColorProvider.light
-                                    : ColorProvider.dark)
-                                    .withOpacity(0.24),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text("add next 5 epochs")),
+                          onTap: () {
+                            if(simulationController.perceptron == null) return;
+                            if(simulationController.isSimulationPlaying) return;
+                            simulationController.trainEpoch(epochs: 5);
+                          },
+                          child: Opacity(
+                            opacity: simulationController.isSimulationPlaying ? 0.5 : 1,
+                            child: Container(
+                                height: 36,
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                                  color: (ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark)
+                                      .withOpacity(0.24),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text("add next 5 epochs")),
+                          ),
                         ),
                       ],
                     ),
                   ),
+                  GetBuilder<SimulationController>(builder: (_) => Text(simulationController.perceptron.toString()),),
                 ],
               ),
             ),

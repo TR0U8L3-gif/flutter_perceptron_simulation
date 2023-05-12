@@ -19,6 +19,9 @@ class SimulationController extends GetxController {
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
 
+  //loading data
+  final Rx<bool> _isFastLoading = Rx(false);
+
   //data sets
   List<List<double>> allInputData = [];
   List<String> allOutputData = [];
@@ -28,6 +31,7 @@ class SimulationController extends GetxController {
   final Rx<List<String>> _predictOutputData = Rx([]);
 
   //simulation
+  double simulationSpeed = 1;
   final Rx<bool> _isSimulationPlaying = Rx(false);
 
   //init
@@ -35,6 +39,9 @@ class SimulationController extends GetxController {
   bool get isDataLoading => _isDataLoading.value;
   bool get isDataLoaded => _isDataLoaded.value;
   String get loadingDataLine => _loadingDataLine.value;
+
+  //loading data
+  bool get isFastLoading => _isFastLoading.value;
 
   //data sets
   List<List<double>> get trainingInputData => _trainingInputData.value;
@@ -48,6 +55,7 @@ class SimulationController extends GetxController {
 
   //loading data
   void cancel() async {
+    _isFastLoading.value = false;
     if (_isDataLoading.value) {
       debugPrint("abort loading example file");
       _dataLoadingController.add("abort");
@@ -64,6 +72,9 @@ class SimulationController extends GetxController {
     _trainingOutputData.value = [];
     _predictInputData.value = [];
     _predictOutputData.value = [];
+  }
+  void turnOnFastLoading(){
+    _isFastLoading.value = true;
   }
   void loadExampleData() async {
     try {
@@ -131,7 +142,7 @@ class SimulationController extends GetxController {
         i++;
 
         //delay for visual effect
-        await Future.delayed(duration15);
+        await Future.delayed(_isFastLoading.value? Duration.zero : duration15);
       });
       // cancel listener
       listener.cancel();
@@ -312,7 +323,7 @@ class SimulationController extends GetxController {
         i++;
 
         //delay for visual effect
-        await Future.delayed(duration15);
+        await Future.delayed(_isFastLoading.value? Duration.zero : duration15);
       });
       // cancel listener
       listener.cancel();
@@ -434,17 +445,43 @@ class SimulationController extends GetxController {
   //simulation
   void initSimulation(){
     _isSimulationPlaying.value = false;
-    //TODO: setData and convert string values to doubles
   }
   void startSimulation(){
-    _isSimulationPlaying.value = true;
+    if(!_isSimulationPlaying.value) {
+      _isSimulationPlaying.value = true;
+      perceptronSimulation();
+    }
   }
   void stopSimulation(){
     _isSimulationPlaying.value = false;
   }
   void restartSimulation(){
     _isSimulationPlaying.value = false;
+    simulationSpeed = 1;
     if(_perceptron.value == null) return;
     _perceptron.value!.resetData();
   }
+
+  void trainEpoch({required int epochs}) async{
+    if(_perceptron.value == null) return;
+    for(int epoch = 0; epoch < epochs; epoch++){
+      _perceptron.value!.train();
+      update();
+      if(epochs > 1) {
+        await Future.delayed(Duration(milliseconds: simulationSpeed == 0 ? 0 : largeDelay ~/ simulationSpeed));
+      }
+    }
+  }
+
+  void perceptronSimulation() async {
+    debugPrint("start");
+    if(_perceptron.value == null) return;
+    if(!_perceptron.value!.isLearning && !_perceptron.value!.isTesting) return;
+    while(true){
+      if(!_isSimulationPlaying.value) return;
+      trainEpoch(epochs: 1);
+      await Future.delayed(Duration(milliseconds: simulationSpeed == 0 ? 0 : largeDelay ~/ simulationSpeed));
+    }
+  }
+
 }
