@@ -10,5 +10,6 @@ class Input extends Node{
 }
 
 class Output extends Node{
-  Output({required super.name, required super.value});
+  double? correctValue;
+  Output({required super.name, required super.value, this.correctValue});
 }

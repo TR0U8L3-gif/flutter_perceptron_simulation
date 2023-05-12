@@ -543,6 +543,9 @@ class SimulationController extends GetxController {
   void initSimulation() {
     _isSimulationPlaying.value = false;
     _isSimulationAdding.value = false;
+    simulationSpeed = 1;
+    if (_perceptron.value == null) return;
+    _perceptron.value!.resetData();
   }
 
   void startSimulation() {
@@ -565,13 +568,14 @@ class SimulationController extends GetxController {
 
   void trainEpoch({required int epochs}) async {
     if (_perceptron.value == null) return;
+    if (_perceptron.value!.inputs.isEmpty || _perceptron.value!.output == null) return;
     _isSimulationAdding.value = true;
     for (int epoch = 0; epoch < epochs; epoch++) {
-      _perceptron.value!.train();
+      _perceptron.value!.trainEpoch();
       update();
       if (epochs > 1) {
         await Future.delayed(Duration(
-            milliseconds: simulationSpeed == 0 ? 0 : largeDelay ~/
+            milliseconds: simulationSpeed == 0 ? 0 : mediumDelay ~/
                 simulationSpeed));
       }
     }
@@ -584,11 +588,13 @@ class SimulationController extends GetxController {
     if (!_perceptron.value!.isLearning && !_perceptron.value!.isTesting) return;
     while (true) {
       if (!_isSimulationPlaying.value) return;
-      trainEpoch(epochs: 1);
-      await Future.delayed(Duration(
-          milliseconds: simulationSpeed == 0 ? 0 : largeDelay ~/
-              simulationSpeed));
+      int milliseconds = simulationSpeed == 0 ? 0 : smallDelay ~/ simulationSpeed;
+      await _perceptron.value!.train(delay: Duration(milliseconds: milliseconds));
     }
+  }
+
+  void updateSimulation(){
+    update();
   }
 
 }

@@ -1,10 +1,12 @@
+import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:perceptron_simulation/core/controllers/perceptron/simulation_controller.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/core/models/node_model.dart';
 import 'package:perceptron_simulation/core/models/activation_function_model.dart';
 
-class Perceptron {
+class Perceptron{
 
   int inputsNumber;
 
@@ -13,7 +15,7 @@ class Perceptron {
   ActivationFunction activationFunction;
   double learningRate;
   List<double> weights = [];
-  double _bias = 0.0;
+  double bias = 0.0;
 
   //data
   List<double> trainingOutputData = [];
@@ -22,12 +24,12 @@ class Perceptron {
   List<List<double>> testingInputData = [];
 
   //simulation
-  List<FlSpot> errorCharPoints = [];
+  List<FlSpot> errorCharPointsTraining = [];
+  List<FlSpot> errorCharPointsTesting = [];
   bool isInitialized = false;
   bool isLearning = true;
   bool isTesting = true;
 
-  get bias => _bias;
 
   Perceptron(
       {required this.inputsNumber,
@@ -60,9 +62,9 @@ class Perceptron {
   }
 
   //calculating
-  void addChartErrorPoint(double globalError) {
-    int length = errorCharPoints.length;
-    errorCharPoints.add(FlSpot(length + 1, globalError));
+  void addChartErrorPointTraining(double globalError) {
+    int length = errorCharPointsTraining.length;
+    errorCharPointsTraining.add(FlSpot(length + 1, globalError));
   }
 
   String weightsToString() {
@@ -87,19 +89,80 @@ class Perceptron {
     debugPrint("Initial weights: ${weightsToString()}");
   }
 
-  void updateWeights({required double error}) {
-    if (inputs.isEmpty || output == null) return;
-    _bias += learningRate * error;
+  void updateWeights({required double error, required List<double> inputs}) {
+    bias += learningRate * error;
     for (int i = 0; i < inputsNumber; i++) {
-      weights[i] += learningRate * error * inputs[i].value;
+      weights[i] += learningRate * error * inputs[i];
     }
   }
 
-  //TODO: one epoch train function that works
-  void train(){
-    for(Input inp in inputs){
-      inp.value ++;
+  //TODO: one step train function that works, animation speed, add signals
+
+  Future<double> train({required Duration delay}) async {
+    double globalError = 0;
+    List<double> correctInputs = [];
+    double correctOutput = 0;
+    double predictedOutput = 0;
+
+    for(int i = 0; i < trainingInputData.length; i++){
+      correctInputs = trainingInputData[i];
+      correctOutput = trainingOutputData[i];
+
+      double weightSum = 0;
+      for(int index = 0; index < inputsNumber; index++){
+        weightSum = correctInputs[index] * weights[index];
+      }
+
+      predictedOutput = activationFunction.calculate(weightSum + bias);
+
+      double error = correctOutput - predictedOutput;
+      globalError += error * error;
+      if(predictedOutput != correctOutput) updateWeights(error: error, inputs: correctInputs);
+
+      output!.value = predictedOutput;
+      output!.correctValue = correctOutput;
+      for(int index = 0; index < inputsNumber; index++){
+        inputs[index].value = correctInputs[index];
+      }
+
+      Get.find<SimulationController>().updateSimulation();
+      await Future.delayed(delay);
     }
+
+    addChartErrorPointTraining(globalError);
+    return globalError;
+  }
+
+  double trainEpoch() {
+    double globalError = 0;
+    List<double> correctInputs = [];
+    double correctOutput = 0;
+    double predictedOutput = 0;
+
+    for(int i = 0; i < trainingInputData.length; i++){
+      correctInputs = trainingInputData[i];
+      correctOutput = trainingOutputData[i];
+
+      double weightSum = 0;
+      for(int index = 0; index < inputsNumber; index++){
+        weightSum = correctInputs[index] * weights[index];
+      }
+
+      predictedOutput = activationFunction.calculate(weightSum + bias);
+
+      double error = correctOutput - predictedOutput;
+      globalError += error * error;
+      if(predictedOutput != correctOutput) updateWeights(error: error, inputs: correctInputs);
+    }
+
+    addChartErrorPointTraining(globalError);
+    output!.value = predictedOutput;
+    output!.correctValue = correctOutput;
+    for(int index = 0; index < inputsNumber; index++){
+      inputs[index].value = correctInputs[index];
+    }
+
+    return globalError;
   }
 
   double predict(List<double> input) {
@@ -107,15 +170,16 @@ class Perceptron {
     for (int weightNumber = 0; weightNumber < input.length; weightNumber++) {
       weightSum += input[weightNumber] * weights[weightNumber];
     }
-    return activationFunction.calculate(weightSum + _bias);
+    return activationFunction.calculate(weightSum + bias);
   }
 
   void resetData(){
 
     weights = [];
-    _bias = 0.0;
+    bias = 0.0;
 
-    errorCharPoints = [];
+    errorCharPointsTraining = [];
+    errorCharPointsTesting= [];
     isLearning = true;
     isTesting = true;
 
@@ -142,7 +206,8 @@ class Perceptron {
     if(output != null){
       result += "Output[${output!.name}]: ${output!.value}\n";
     }
-    result += "Epoch: ${errorCharPoints.length}\n";
+    result += "Epoch: ${errorCharPointsTraining.length}\n";
+    result += "global error: ${errorCharPointsTraining.isEmpty ? "null" : errorCharPointsTraining[errorCharPointsTraining.length-1]}\n";
     result += "isLearning: $isLearning\n";
     result += "isTesting: $isTesting\n\n";
     result += "trainingInput: ${trainingInputData.length}\n";

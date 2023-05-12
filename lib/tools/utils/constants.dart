@@ -6,8 +6,8 @@ import 'package:perceptron_simulation/core/controllers/routes/route_controller.d
 var routeController = RouteController.instance;
 
 //Duration double
-double smallDelay = 10;
-double mediumDelay = 100;
+double smallDelay = 80;
+double mediumDelay = 200;
 double largeDelay = 500;
 
 //Durations

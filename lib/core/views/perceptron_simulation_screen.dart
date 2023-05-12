@@ -201,7 +201,7 @@ class _PerceptronSimulationScreenState
                                       .withOpacity(0.24),
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text("add next epoch")),
+                                child: const Text("add epoch")),
                           ),
                         ),
                         InkWell(
@@ -226,7 +226,32 @@ class _PerceptronSimulationScreenState
                                       .withOpacity(0.24),
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text("add next 5 epochs")),
+                                child: const Text("add 5 epochs")),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(32)),
+                          onTap: () {
+                            if(simulationController.perceptron == null) return;
+                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding) return;
+                            simulationController.trainEpoch(epochs: 25);
+                          },
+                          child: Opacity(
+                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding  ? 0.5 : 1,
+                            child: Container(
+                                height: 36,
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                                  color: (ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark)
+                                      .withOpacity(0.24),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text("add 25 epochs")),
                           ),
                         ),
                       ],
