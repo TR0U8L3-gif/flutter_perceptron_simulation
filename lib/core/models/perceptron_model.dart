@@ -12,7 +12,6 @@ class Perceptron {
   List<Input> inputs = [];
   ActivationFunction activationFunction;
   double learningRate;
-
   List<double> weights = [];
   double _bias = 0.0;
 
@@ -145,7 +144,11 @@ class Perceptron {
     }
     result += "Epoch: ${errorCharPoints.length}\n";
     result += "isLearning: $isLearning\n";
-    result += "isTesting: $isTesting\n";
+    result += "isTesting: $isTesting\n\n";
+    result += "trainingInput: ${trainingInputData.length}\n";
+    result += "trainingOutput: ${trainingOutputData.length}\n";
+    result += "testingInput: ${testingInputData.length}\n";
+    result += "testingOutput: ${testingOutputData.length}\n";
     return result;
   }
 }

@@ -141,7 +141,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(32)),
                         onTap: () {
-                          Get.toNamed(routeController.getPerceptronSimulationRoute);
+                          simulationController.goToSimulation();
                         },
                         child: AnimatedContainer(
                             width: (simulationController
