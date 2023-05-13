@@ -36,6 +36,7 @@ class SimulationController extends GetxController {
   double simulationSpeed = 1;
   final Rx<bool> _isSimulationPlaying = Rx(false);
   final Rx<bool> _isSimulationAdding = Rx(false);
+  final Rx<bool> _isSimulating = Rx(false);
 
   //init
   Perceptron? get perceptron => _perceptron.value;
@@ -61,6 +62,7 @@ class SimulationController extends GetxController {
   //simulation
   bool get isSimulationPlaying => _isSimulationPlaying.value;
   bool get isSimulationAdding => _isSimulationAdding.value;
+  bool get isSimulating => _isSimulating.value;
 
   //loading data
   void cancel() async {
@@ -588,8 +590,14 @@ class SimulationController extends GetxController {
     if (!_perceptron.value!.isLearning && !_perceptron.value!.isTesting) return;
     while (true) {
       if (!_isSimulationPlaying.value) return;
+      _isSimulating.value = true;
+      debugPrint("simulation started");
       int milliseconds = simulationSpeed == 0 ? 0 : smallDelay ~/ simulationSpeed;
-      await _perceptron.value!.train(delay: Duration(milliseconds: milliseconds));
+      await _perceptron.value!.train(delay: Duration(milliseconds: milliseconds)).then((value) {
+        _isSimulating.value = false;
+        debugPrint("simulation ended");
+        update();
+      });
     }
   }
 

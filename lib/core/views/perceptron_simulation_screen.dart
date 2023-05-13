@@ -50,24 +50,27 @@ class _PerceptronSimulationScreenState
                           borderRadius:
                               const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.isSimulationAdding) return;
+                            if(simulationController.isSimulationAdding || simulationController.isSimulating) return;
                             setState(() {
                               simulationController.restartSimulation();
                             });
                           },
-                          child: Container(
-                              height: 36,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(32)),
-                                color: (ColorProvider.isThemeDark(context)
-                                        ? ColorProvider.light
-                                        : ColorProvider.dark)
-                                    .withOpacity(0.24),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text("Restart")),
+                          child: Opacity(
+                            opacity: simulationController.isSimulating ? 0.5 : 1,
+                            child: Container(
+                                height: 36,
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                  color: (ColorProvider.isThemeDark(context)
+                                          ? ColorProvider.light
+                                          : ColorProvider.dark)
+                                      .withOpacity(0.24),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text("Restart")),
+                          ),
                         ),
                         InkWell(
                           borderRadius:
@@ -101,29 +104,34 @@ class _PerceptronSimulationScreenState
                           borderRadius:
                               const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.isSimulationAdding) return;
+                            if(simulationController.isSimulationAdding || simulationController.isSimulating) {
+                              return;
+                            }
                             simulationController.startSimulation();
                           },
-                          child: Container(
-                              height: 36,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(32)),
-                                color: (simulationController.isSimulationPlaying
-                                        ? (ColorProvider.isThemeDark(context)
-                                            ? ColorProvider.yellowDark
-                                            : ColorProvider.yellowLight)
-                                        : (ColorProvider.isThemeDark(context)
-                                            ? ColorProvider.light
-                                            : ColorProvider.dark))
-                                    .withOpacity(
-                                        simulationController.isSimulationPlaying
-                                            ? 0.48
-                                            : 0.24),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text("Start")),
+                          child: Opacity(
+                            opacity:simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
+                            child: Container(
+                                height: 36,
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                  color: (simulationController.isSimulationPlaying
+                                          ? (ColorProvider.isThemeDark(context)
+                                              ? ColorProvider.yellowDark
+                                              : ColorProvider.yellowLight)
+                                          : (ColorProvider.isThemeDark(context)
+                                              ? ColorProvider.light
+                                              : ColorProvider.dark))
+                                      .withOpacity(
+                                          simulationController.isSimulationPlaying
+                                              ? 0.48
+                                              : 0.24),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text("Start")),
+                          ),
                         ),
                       ],
                     ),
@@ -184,11 +192,11 @@ class _PerceptronSimulationScreenState
                           const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
                             if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding) return;
+                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
                             simulationController.trainEpoch(epochs: 1);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding ? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating? 0.5 : 1,
                             child: Container(
                                 height: 36,
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -209,11 +217,11 @@ class _PerceptronSimulationScreenState
                           const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
                             if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding) return;
+                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
                             simulationController.trainEpoch(epochs: 5);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding  ? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
                             child: Container(
                                 height: 36,
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -234,11 +242,11 @@ class _PerceptronSimulationScreenState
                           const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
                             if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding) return;
+                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
                             simulationController.trainEpoch(epochs: 25);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding  ? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
                             child: Container(
                                 height: 36,
                                 padding: const EdgeInsets.symmetric(horizontal: 12),

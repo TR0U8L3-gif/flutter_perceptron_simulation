@@ -174,7 +174,6 @@ class Perceptron{
   }
 
   void resetData(){
-
     weights = [];
     bias = 0.0;
 
