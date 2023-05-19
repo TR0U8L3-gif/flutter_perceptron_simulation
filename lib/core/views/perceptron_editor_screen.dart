@@ -100,7 +100,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
                           width: (simulationController
                                       .trainingOutputData.isNotEmpty &&
                                   simulationController
-                                      .predictOutputData.isNotEmpty)
+                                      .testingOutputData.isNotEmpty)
                               ? (size.width -
                                       min(size.width, size.height) * 0.2) -
                                   48 -
@@ -133,7 +133,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
                           width: (simulationController
                                       .trainingOutputData.isNotEmpty &&
                                   simulationController
-                                      .predictOutputData.isNotEmpty)
+                                      .testingOutputData.isNotEmpty)
                               ? 8
                               : 0,
                           duration: duration400),
@@ -141,13 +141,13 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(32)),
                         onTap: () {
-                          simulationController.goToSimulation();
+                          Get.toNamed(routeController.getPerceptronSimulationRoute);
                         },
                         child: AnimatedContainer(
                             width: (simulationController
                                         .trainingOutputData.isNotEmpty &&
                                     simulationController
-                                        .predictOutputData.isNotEmpty)
+                                        .testingOutputData.isNotEmpty)
                                 ? 48
                                 : 0,
                             height: 48,
@@ -397,8 +397,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
                   activationFunction = SigmoidFunction();
                 });
                 if (simulationController.perceptron == null) return;
-                simulationController.perceptron!.activationFunction =
-                    SigmoidFunction();
+                simulationController.setActivationFunction(activationFunction: SigmoidFunction());
               },
               child: Container(
                   height: 36,
@@ -418,8 +417,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
               onTap: () {
                 if (simulationController.perceptron == null) return;
                 setState(() {
-                  simulationController.perceptron!.activationFunction =
-                      activationFunction;
+                  simulationController.setActivationFunction(activationFunction: activationFunction);
                 });
               },
               child: Container(

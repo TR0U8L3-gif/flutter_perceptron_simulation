@@ -193,7 +193,7 @@ class _PerceptronSimulationScreenState
                           onTap: () {
                             if(simulationController.perceptron == null) return;
                             if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.trainEpoch(epochs: 1);
+                            simulationController.perceptronTrainEpoch(epochs: 1);
                           },
                           child: Opacity(
                             opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating? 0.5 : 1,
@@ -218,7 +218,7 @@ class _PerceptronSimulationScreenState
                           onTap: () {
                             if(simulationController.perceptron == null) return;
                             if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.trainEpoch(epochs: 5);
+                            simulationController.perceptronTrainEpoch(epochs: 5);
                           },
                           child: Opacity(
                             opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
@@ -243,7 +243,7 @@ class _PerceptronSimulationScreenState
                           onTap: () {
                             if(simulationController.perceptron == null) return;
                             if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.trainEpoch(epochs: 25);
+                            simulationController.perceptronTrainEpoch(epochs: 25);
                           },
                           child: Opacity(
                             opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,

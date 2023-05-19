@@ -11,26 +11,19 @@ import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/core/models/perceptron_model.dart';
 
 class SimulationController extends GetxController {
-
   //init
   final Rx<Perceptron?> _perceptron = Rx(null);
+
+  //loading data
   final _dataLoadingController = StreamController<String>.broadcast();
+  final Rx<bool> _isFastLoading = Rx(false);
   final Rx<bool> _isDataLoading = Rx(false);
   final Rx<bool> _isDataLoaded = Rx(false);
   final Rx<String> _loadingDataLine = Rx("...");
 
-  //loading data
-  final Rx<bool> _isFastLoading = Rx(false);
-
   //data sets
   List<List<double>> allInputData = [];
   List<String> allOutputData = [];
-  Map<String, double> outputMap = {};
-  final Rx<List<List<double>>> _trainingInputData = Rx([]);
-  final Rx<List<String>> _trainingOutputData = Rx([]);
-  final Rx<List<List<double>>> _predictInputData = Rx([]);
-  final Rx<List<String>> _predictOutputData = Rx([]);
-
 
   //simulation
   double simulationSpeed = 1;
@@ -51,17 +44,31 @@ class SimulationController extends GetxController {
   bool get isFastLoading => _isFastLoading.value;
 
   //data sets
-  List<List<double>> get trainingInputData => _trainingInputData.value;
+  List<List<double>> get trainingInputData {
+    if(_perceptron.value == null) return [];
+    return _perceptron.value!.trainingInputData;
+  }
 
-  List<String> get trainingOutputData => _trainingOutputData.value;
+  List<String> get trainingOutputData {
+    if(_perceptron.value == null) return [];
+    return _perceptron.value!.trainingOutputDataString();
+  }
 
-  List<List<double>> get predictInputData => _predictInputData.value;
+  List<List<double>> get testingInputData {
+    if(_perceptron.value == null) return [];
+    return _perceptron.value!.testingInputData;
+  }
 
-  List<String> get predictOutputData => _predictOutputData.value;
+  List<String> get testingOutputData {
+    if(_perceptron.value == null) return [];
+    return _perceptron.value!.testingOutputDataString();
+  }
 
   //simulation
   bool get isSimulationPlaying => _isSimulationPlaying.value;
+
   bool get isSimulationAdding => _isSimulationAdding.value;
+
   bool get isSimulating => _isSimulating.value;
 
   //loading data
@@ -79,11 +86,6 @@ class SimulationController extends GetxController {
 
     allOutputData = [];
     allInputData = [];
-    outputMap = {};
-    _trainingInputData.value = [];
-    _trainingOutputData.value = [];
-    _predictInputData.value = [];
-    _predictOutputData.value = [];
   }
 
   void turnOnFastLoading() {
@@ -110,7 +112,7 @@ class SimulationController extends GetxController {
 
       //signal listener
       StreamSubscription listener =
-      _dataLoadingController.stream.listen((event) {
+          _dataLoadingController.stream.listen((event) {
         debugPrint("New signal received: $event");
         signal = event;
       });
@@ -152,6 +154,17 @@ class SimulationController extends GetxController {
           inputData.add(input.map((source) => double.parse(source)).toList());
         }
 
+        //check if there are max 2 outputs
+        int outputsLength = outputData.toSet().toList().length;
+        if (outputsLength > 2) {
+          cancel();
+          Get.offAllNamed(routeController.getMainRoute);
+          Get.snackbar("Invalid file format",
+              "Perceptron cannot have more than two outputs",
+              duration: const Duration(seconds: 6));
+          return;
+        }
+
         //increment line number
         i++;
 
@@ -175,9 +188,7 @@ class SimulationController extends GetxController {
       allInputData = inputData;
 
       debugPrint(
-          "input [${allInputData
-              .length}]: $allInputData\noutput [${allOutputData
-              .length}]: $allOutputData");
+          "input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
     } catch (e) {
       cancel();
       Get.offAllNamed(routeController.getMainRoute);
@@ -213,10 +224,9 @@ class SimulationController extends GetxController {
     //reading data from file and splitting it by new lines and ignoring empty one
     File textFile = File(file.path!);
     String response = await textFile.readAsString();
-    LineSplitter.split(response).forEach((line) =>
-    {
-      if (line.isNotEmpty) {dataFile.add(line)}
-    });
+    LineSplitter.split(response).forEach((line) => {
+          if (line.isNotEmpty) {dataFile.add(line)}
+        });
 
     //checking if file contain data
     if (dataFile.isEmpty) {
@@ -257,14 +267,13 @@ class SimulationController extends GetxController {
         activationFunction: SigmoidFunction())
       ..initialize(inputNames: inputNames, outputName: outputName);
 
-
     //go to loading route
     Get.toNamed(routeController.getLoadDataRoute);
 
     try {
       //signal listener
       StreamSubscription listener =
-      _dataLoadingController.stream.listen((event) {
+          _dataLoadingController.stream.listen((event) {
         debugPrint("New signal received: $event");
         signal = event;
       });
@@ -315,8 +324,7 @@ class SimulationController extends GetxController {
             cancel();
             Get.offAllNamed(routeController.getMainRoute);
             Get.snackbar("Wrong file template in line nr $i",
-                "line input size ($inputsNumber) do not match perceptron input size (${_perceptron
-                    .value!.inputsNumber})",
+                "line input size ($inputsNumber) do not match perceptron input size (${_perceptron.value!.inputsNumber})",
                 duration: const Duration(seconds: 6));
             return;
           }
@@ -347,6 +355,17 @@ class SimulationController extends GetxController {
           inputData.add(input.map((source) => double.parse(source)).toList());
         }
 
+        //check if there are max 2 outputs
+        int outputsLength = outputData.toSet().toList().length;
+        if (outputsLength > 2) {
+          cancel();
+          Get.offAllNamed(routeController.getMainRoute);
+          Get.snackbar("Invalid file format",
+              "Perceptron cannot have more than two outputs",
+              duration: const Duration(seconds: 6));
+          return;
+        }
+
         //increment line number
         i++;
 
@@ -370,9 +389,7 @@ class SimulationController extends GetxController {
       allInputData = inputData;
 
       debugPrint(
-          "input [${allInputData
-              .length}]: $allInputData\noutput [${allOutputData
-              .length}]: $allOutputData");
+          "input [${allInputData.length}]: $allInputData\noutput [${allOutputData.length}]: $allOutputData");
     } catch (e) {
       cancel();
       Get.offAllNamed(routeController.getMainRoute);
@@ -383,14 +400,90 @@ class SimulationController extends GetxController {
   }
 
   //data sets randomize
+  void convertOutputsToDouble({
+    required List<String> allOutputs,
+    required List<List<double>> trainingInputData,
+    required List<String> trainingOutputDataString,
+    required List<List<double>> testingInputData,
+    required List<String> testingOutputDataString,
+  }) {
+    List<String> sortedUniqueList = allOutputs.toSet().toList()..sort();
+
+    debugPrint("unique list: $sortedUniqueList");
+
+    int length = sortedUniqueList.length;
+
+    if (length > 2) {
+      cancel();
+      Get.offAllNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "Perceptron was not initialized",
+          duration: const Duration(seconds: 6));
+      return;
+    }
+
+    double min = (_perceptron.value!.activationFunction.min ?? -1).toDouble();
+    double max = (_perceptron.value!.activationFunction.max ?? 1).toDouble();
+
+    Map<String, double> outputMap = {
+      sortedUniqueList[0]: min,
+      sortedUniqueList[1]: max,
+    };
+
+    Map<double, String> stringOutputs = {
+      min: sortedUniqueList[0],
+      max: sortedUniqueList[1],
+    };
+
+    debugPrint("output map: $outputMap");
+
+    List<double> trainingOutputData = [];
+    List<double> testingOutputData = [];
+
+    debugPrint("output list train: ");
+    for (String data in trainingOutputDataString) {
+      double? value = outputMap[data];
+      trainingOutputData.add(value ?? 0);
+      debugPrint("$data: $value");
+    }
+
+    debugPrint("output list test: ");
+    for (String data in testingOutputDataString) {
+      double? value = outputMap[data];
+      testingOutputData.add(value ?? 0);
+      debugPrint("$data: $value");
+    }
+
+    _perceptron.value!.setData(
+      testingInputData: testingInputData,
+      testingOutputData: testingOutputData,
+      trainingInputData: trainingInputData,
+      trainingOutputData: trainingOutputData,
+      stringOutputs: stringOutputs,
+    );
+  }
+
   void clearSets() {
-    _trainingInputData.value = [];
-    _trainingOutputData.value = [];
-    _predictInputData.value = [];
-    _predictOutputData.value = [];
+    if (_perceptron.value == null) {
+      cancel();
+      Get.offAllNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "Perceptron was not initialized",
+          duration: const Duration(seconds: 6));
+      return;
+    }
+    _perceptron.value!.trainingInputData = [];
+    _perceptron.value!.trainingOutputData = [];
+    _perceptron.value!.testingInputData = [];
+    _perceptron.value!.testingOutputData = [];
   }
 
   void randomizeSets({required int percentage}) {
+    if (_perceptron.value == null) {
+      cancel();
+      Get.offAllNamed(routeController.getMainRoute);
+      Get.snackbar("Something went wrong", "Perceptron was not initialized",
+          duration: const Duration(seconds: 6));
+      return;
+    }
     if (percentage <= 0 || percentage >= 100) {
       Get.snackbar("Data separation failed",
           "The selected percentage: $percentage% is invalid",
@@ -423,22 +516,34 @@ class SimulationController extends GetxController {
 
     debugPrint("${selectedNumbers.toList()}");
 
+    List<List<double>> trainingInputData = [];
+    List<String> trainingOutputData = [];
+    List<List<double>> testingInputData = [];
+    List<String> testingOutputData = [];
+
     for (int i = 0; i < allData; i++) {
       if (selectedNumbers.contains(i)) {
         //go to training data
-        _trainingInputData.value.add(allInputData[i]);
-        _trainingOutputData.value.add(allOutputData[i]);
+        trainingInputData.add(allInputData[i]);
+        trainingOutputData.add(allOutputData[i]);
       } else {
         //go to test data
-        _predictInputData.value.add(allInputData[i]);
-        _predictOutputData.value.add(allOutputData[i]);
+        testingInputData.add(allInputData[i]);
+        testingOutputData.add(allOutputData[i]);
       }
     }
+
+    convertOutputsToDouble(
+        allOutputs: allOutputData,
+        trainingInputData: trainingInputData,
+        trainingOutputDataString: trainingOutputData,
+        testingInputData: testingInputData,
+        testingOutputDataString: testingOutputData);
   }
 
   //perceptron editor
   void setActivationFunction({required ActivationFunction activationFunction}) {
-    if (_trainingInputData.value.isEmpty) {
+    if (trainingInputData.isEmpty) {
       cancel();
       Get.toNamed(routeController.getMainRoute);
       Get.snackbar("Something went wrong", "Test data set is empty",
@@ -455,10 +560,12 @@ class SimulationController extends GetxController {
     }
 
     _perceptron.value!.activationFunction = activationFunction;
+
+    _perceptron.value!.calculateOutputValue();
   }
 
   void setLearningRate({required double learningRate}) {
-    if (_trainingInputData.value.isEmpty) {
+    if (trainingInputData.isEmpty) {
       cancel();
       Get.toNamed(routeController.getMainRoute);
       Get.snackbar("Something went wrong", "Test data set is empty",
@@ -482,66 +589,11 @@ class SimulationController extends GetxController {
     _perceptron.value!.learningRate = learningRate;
   }
 
-  void outputStringToDouble() {
-    if (_perceptron.value == null) {
-      cancel();
-      Get.toNamed(routeController.getMainRoute);
-      Get.snackbar(
-          "Something went wrong", "The perceptron has not been initialized",
-          duration: const Duration(seconds: 6));
-      return;
-    }
-    List<String> sortedUniqueList = allOutputData.toSet().toList()
-      ..sort();
-    debugPrint("unique list: $sortedUniqueList");
-
-    int length = sortedUniqueList.length;
-    double min = (_perceptron.value!.activationFunction.min ?? -length)
-        .toDouble();
-    double max = (_perceptron.value!.activationFunction.max ?? length)
-        .toDouble();
-    double section = (max - min) / (length - 1);
-    outputMap = {};
-
-    for (int i = 0; i < length; i++) {
-      double value = min + section * i;
-      //debugPrint("[$i] ${sortedUniqueList[i]} => $value");
-      outputMap.putIfAbsent(sortedUniqueList[i], () => value);
-    }
-
-    debugPrint("output map: $outputMap");
-
-    List<double> trainingOutputData = [];
-    List<double> testingOutputData = [];
-
-    debugPrint("output list train: ");
-    for(String data in _trainingOutputData.value){
-      double? value = outputMap[data];
-      trainingOutputData.add(value ?? 0);
-      debugPrint("$data: $value");
-    }
-
-    debugPrint("output list test: ");
-    for(String data in _predictOutputData.value){
-      double? value = outputMap[data];
-      testingOutputData.add(value ?? 0);
-      debugPrint("$data: $value");
-    }
-
-    _perceptron.value!.setData(
-      testingInputData: _predictInputData.value,
-      testingOutputData: testingOutputData,
-      trainingInputData: _trainingInputData.value,
-      trainingOutputData: trainingOutputData,
-    );
-  }
-
-  void goToSimulation() async {
-    await Future.delayed(Duration.zero, () => outputStringToDouble());
-    Get.toNamed(routeController.getPerceptronSimulationRoute);
-  }
-
   //simulation
+  void updateSimulation() {
+    update();
+  }
+
   void initSimulation() {
     _isSimulationPlaying.value = false;
     _isSimulationAdding.value = false;
@@ -553,7 +605,7 @@ class SimulationController extends GetxController {
   void startSimulation() {
     if (!_isSimulationPlaying.value) {
       _isSimulationPlaying.value = true;
-      perceptronSimulation();
+      perceptronTrainSimulation();
     }
   }
 
@@ -568,41 +620,43 @@ class SimulationController extends GetxController {
     _perceptron.value!.resetData();
   }
 
-  void trainEpoch({required int epochs}) async {
+  void perceptronTrainEpoch({required int epochs}) async {
     if (_perceptron.value == null) return;
-    if (_perceptron.value!.inputs.isEmpty || _perceptron.value!.output == null) return;
+    if (_perceptron.value!.inputs.isEmpty ||
+        _perceptron.value!.output == null) {
+      return;
+    }
     _isSimulationAdding.value = true;
     for (int epoch = 0; epoch < epochs; epoch++) {
       _perceptron.value!.trainEpoch();
       update();
       if (epochs > 1) {
         await Future.delayed(Duration(
-            milliseconds: simulationSpeed == 0 ? 0 : mediumDelay ~/
-                simulationSpeed));
+            milliseconds:
+                simulationSpeed == 0 ? 0 : largeDelay ~/ simulationSpeed * 2));
       }
     }
     _isSimulationAdding.value = false;
   }
 
-  void perceptronSimulation() async {
+  void perceptronTrainSimulation() async {
     debugPrint("start");
     if (_perceptron.value == null) return;
-    if (!_perceptron.value!.isLearning && !_perceptron.value!.isTesting) return;
     while (true) {
       if (!_isSimulationPlaying.value) return;
       _isSimulating.value = true;
       debugPrint("simulation started");
-      int milliseconds = simulationSpeed == 0 ? 0 : smallDelay ~/ simulationSpeed;
-      await _perceptron.value!.train(delay: Duration(milliseconds: milliseconds)).then((value) {
-        _isSimulating.value = false;
-        debugPrint("simulation ended");
-        update();
-      });
-    }
-  }
 
-  void updateSimulation(){
-    update();
+      int milliseconds =
+          simulationSpeed == 0 ? 0 : largeDelay ~/ simulationSpeed;
+
+      await _perceptron.value!
+          .train(delay: Duration(milliseconds: milliseconds));
+
+      _isSimulating.value = false;
+      debugPrint("simulation ended");
+      update();
+    }
   }
 
 }

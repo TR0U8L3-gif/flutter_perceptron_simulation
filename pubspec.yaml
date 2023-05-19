@@ -39,6 +39,7 @@ dependencies:
   fl_chart: ^0.62.0
   file_picker: ^5.2.11
   flutter_launcher_icons: ^0.13.1
+  collection: ^1.17.0
 
 dev_dependencies:
   flutter_test:

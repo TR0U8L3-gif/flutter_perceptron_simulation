@@ -157,8 +157,10 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                             InkWell(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(32)),
-                              onTap: () => simulationController.randomizeSets(
-                                  percentage: percentage),
+                              onTap: () => setState(() {
+                                simulationController.randomizeSets(
+                                    percentage: percentage);
+                              }),
                               child: Container(
                                   height: 36,
                                   padding: const EdgeInsets.symmetric(
@@ -166,13 +168,6 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                                   decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(32)),
-                                      // gradient: LinearGradient(
-                                      //     colors: ColorProvider.isThemeDark() ?  [ColorProvider.blueDark, ColorProvider.greenDark] : [ColorProvider.blueLight, ColorProvider.greenLight],
-                                      //     begin: const FractionalOffset(0.0, 0.0),
-                                      //     end: const FractionalOffset(0.5, 0.0),
-                                      //     stops: const [0.0, 1.0],
-                                      //     tileMode: TileMode.clamp
-                                      // ),
                                       color: (ColorProvider.isThemeDark(context)
                                               ? ColorProvider.yellowDark
                                               : ColorProvider.yellowLight)
@@ -197,7 +192,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                               firstChild: Text(
                                 simulationController.trainingOutputData.isEmpty
                                     ? "..."
-                                    : "Data has been split:\n ${simulationController.trainingOutputData.length} training ex. ${simulationController.predictOutputData.length} testing ex.",
+                                    : "Data has been split:\n ${simulationController.trainingOutputData.length} training ex. ${simulationController.testingOutputData.length} testing ex.",
                                 style: const TextStyle(fontSize: 18),
                                 textAlign: TextAlign.center,
                               ),
@@ -209,7 +204,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                               crossFadeState: (simulationController
                                           .trainingOutputData.isNotEmpty &&
                                       simulationController
-                                          .predictOutputData.isNotEmpty)
+                                          .testingOutputData.isNotEmpty)
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: duration600,
@@ -233,7 +228,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                                 width: (simulationController
                                             .trainingOutputData.isNotEmpty &&
                                         simulationController
-                                            .predictOutputData.isNotEmpty)
+                                            .testingOutputData.isNotEmpty)
                                     ? (size.width -
                                             min(size.width, size.height) *
                                                 0.2) -
@@ -267,7 +262,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                                 width: (simulationController
                                             .trainingOutputData.isNotEmpty &&
                                         simulationController
-                                            .predictOutputData.isNotEmpty)
+                                            .testingOutputData.isNotEmpty)
                                     ? 8
                                     : 0,
                                 duration: duration400),
@@ -281,7 +276,7 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                                   width: (simulationController
                                               .trainingOutputData.isNotEmpty &&
                                           simulationController
-                                              .predictOutputData.isNotEmpty)
+                                              .testingOutputData.isNotEmpty)
                                       ? 48
                                       : 0,
                                   height: 48,
@@ -367,12 +362,12 @@ class _DataSplittingScreenState extends State<DataSplittingScreen> {
                           ListView.builder(
                               shrinkWrap: true,
                               itemCount:
-                              simulationController.predictOutputData.length,
+                              simulationController.testingOutputData.length,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 8),
                                   child: Text(
-                                    "${simulationController.predictInputData[index]} -> ${simulationController.predictOutputData[index]}",
+                                    "${simulationController.testingInputData[index]} -> ${simulationController.testingOutputData[index]}",
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
