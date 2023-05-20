@@ -32,6 +32,8 @@ class Perceptron{
   int epoch = 0;
   bool isInitialized = false;
 
+  double get lastErrorTraining => errorCharPointsTraining.isNotEmpty ? errorCharPointsTraining[errorCharPointsTraining.length-1].y : 0;
+  double get lastErrorTesting => errorCharPointsTesting.isNotEmpty ? errorCharPointsTesting[errorCharPointsTesting.length-1].y : 0;
   //init
   Perceptron(
       {required this.inputsNumber,
@@ -149,7 +151,6 @@ class Perceptron{
     }
   }
 
-  //TODO all
   Future<void> train({required Duration delay}) async {
     List<double> correctInputs = [];
     double correctOutput = 0;
@@ -181,7 +182,7 @@ class Perceptron{
       test();
 
       Get.find<SimulationController>().updateSimulation();
-      await Future.delayed(Duration(milliseconds: delay.inMilliseconds ~/  Get.find<SimulationController>().simulationSpeed * 2));
+      await Future.delayed(Duration(milliseconds: Get.find<SimulationController>().simulationSpeed == 0 ? 0 : delay.inMilliseconds ~/  Get.find<SimulationController>().simulationSpeed * 2));
     }
     epoch++;
   }
@@ -287,10 +288,11 @@ class Perceptron{
     if(output != null){
       result += "Output[${output!.name}]: ${output!.value}\n";
     }
+    result += "Steps: ${errorCharPointsTraining.length}\n";
     result += "Epoch: $epoch\n";
-    result += "global error: ${errorCharPointsTraining.isEmpty ? "null" : errorCharPointsTraining[errorCharPointsTraining.length-1]}\n";
-    result += "testing error: ${errorCharPointsTesting.isEmpty ? "null" : errorCharPointsTesting[errorCharPointsTesting.length-1]}\n";
-    result += "percentage: $percentageOfCorrectAnswers\n";
+    result += "Global error: ${errorCharPointsTraining.isEmpty ? "null" : errorCharPointsTraining[errorCharPointsTraining.length-1]}\n";
+    result += "Testing error: ${errorCharPointsTesting.isEmpty ? "null" : errorCharPointsTesting[errorCharPointsTesting.length-1]}\n";
+    result += "Percentage: $percentageOfCorrectAnswers\n";
     result += "trainingInput: ${trainingInputData.length}\n";
     result += "trainingOutput: ${trainingOutputData.length}\n";
     result += "testingInput: ${testingInputData.length}\n";

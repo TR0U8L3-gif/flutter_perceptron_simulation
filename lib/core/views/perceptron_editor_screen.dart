@@ -551,7 +551,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
           padding: const EdgeInsets.all(8),
           child: Slider(
             min: 0.01,
-            max: 2,
+            max: 1,
             thumbColor: ColorProvider.isThemeDark(context)
                 ? ColorProvider.yellowDark
                 : ColorProvider.yellowLight,
@@ -568,7 +568,7 @@ class _PerceptronEditorScreenState extends State<PerceptronEditorScreen> {
             width: double.infinity,
             alignment: Alignment.topCenter,
             child: Text(
-              learningRate < 1
+              learningRate < 0.5
                   ? "lower learning rate can improve stability, but it may also result in slower convergence"
                   : "higher learning rate can lead to faster convergence, but it may also cause instability",
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

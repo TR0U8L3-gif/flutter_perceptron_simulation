@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
@@ -50,19 +51,22 @@ class _PerceptronSimulationScreenState
                           borderRadius:
                               const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.isSimulationAdding || simulationController.isSimulating) return;
+                            if (simulationController.isSimulationAdding ||
+                                simulationController.isSimulating) return;
                             setState(() {
                               simulationController.restartSimulation();
                             });
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulating ? 0.5 : 1,
+                            opacity:
+                                simulationController.isSimulating ? 0.5 : 1,
                             child: Container(
                                 height: 36,
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(32)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
                                   color: (ColorProvider.isThemeDark(context)
                                           ? ColorProvider.light
                                           : ColorProvider.dark)
@@ -76,26 +80,28 @@ class _PerceptronSimulationScreenState
                           borderRadius:
                               const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.isSimulationAdding) return;
+                            if (simulationController.isSimulationAdding) return;
                             simulationController.stopSimulation();
                           },
                           child: Container(
                               height: 36,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
                               decoration: BoxDecoration(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(32)),
-                                color: (!simulationController.isSimulationPlaying
+                                color: (!simulationController
+                                            .isSimulationPlaying
                                         ? (ColorProvider.isThemeDark(context)
                                             ? ColorProvider.yellowDark
                                             : ColorProvider.yellowLight)
                                         : (ColorProvider.isThemeDark(context)
                                             ? ColorProvider.light
                                             : ColorProvider.dark))
-                                    .withOpacity(
-                                        !simulationController.isSimulationPlaying
-                                            ? 0.48
-                                            : 0.24),
+                                    .withOpacity(!simulationController
+                                            .isSimulationPlaying
+                                        ? 0.48
+                                        : 0.24),
                               ),
                               alignment: Alignment.center,
                               child: const Text("Stop")),
@@ -104,30 +110,36 @@ class _PerceptronSimulationScreenState
                           borderRadius:
                               const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.isSimulationAdding || simulationController.isSimulating) {
+                            if (simulationController.isSimulationAdding ||
+                                simulationController.isSimulating) {
                               return;
                             }
                             simulationController.startSimulation();
                           },
                           child: Opacity(
-                            opacity:simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
+                            opacity: simulationController.isSimulationAdding ||
+                                    simulationController.isSimulating
+                                ? 0.5
+                                : 1,
                             child: Container(
                                 height: 36,
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(32)),
-                                  color: (simulationController.isSimulationPlaying
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
+                                  color: (simulationController
+                                              .isSimulationPlaying
                                           ? (ColorProvider.isThemeDark(context)
                                               ? ColorProvider.yellowDark
                                               : ColorProvider.yellowLight)
                                           : (ColorProvider.isThemeDark(context)
                                               ? ColorProvider.light
                                               : ColorProvider.dark))
-                                      .withOpacity(
-                                          simulationController.isSimulationPlaying
-                                              ? 0.48
-                                              : 0.24),
+                                      .withOpacity(simulationController
+                                              .isSimulationPlaying
+                                          ? 0.48
+                                          : 0.24),
                                 ),
                                 alignment: Alignment.center,
                                 child: const Text("Start")),
@@ -164,13 +176,14 @@ class _PerceptronSimulationScreenState
                                 child: Slider(
                                   min: 0,
                                   max: 10.0,
-                                  thumbColor:
-                                  ColorProvider.isThemeDark(context)
+                                  thumbColor: ColorProvider.isThemeDark(context)
                                       ? ColorProvider.yellowDark
                                       : ColorProvider.yellowLight,
-                                  value: simulationController.simulationSpeed.toDouble(),
+                                  value: simulationController.simulationSpeed
+                                      .toDouble(),
                                   onChanged: (double value) => setState(() {
-                                    simulationController..simulationSpeed = roundDouble(value, 1);
+                                    simulationController
+                                      ..simulationSpeed = roundDouble(value, 1);
                                   }),
                                 ),
                               ),
@@ -180,7 +193,9 @@ class _PerceptronSimulationScreenState
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32,),
+                  const SizedBox(
+                    height: 32,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
@@ -189,23 +204,31 @@ class _PerceptronSimulationScreenState
                       children: [
                         InkWell(
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(32)),
+                              const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.perceptronTrainEpoch(epochs: 1);
+                            if (simulationController.perceptron == null) return;
+                            if (simulationController.isSimulationPlaying ||
+                                simulationController.isSimulationAdding ||
+                                simulationController.isSimulating) return;
+                            simulationController.perceptronTrainEpoch(
+                                epochs: 1);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying ||
+                                    simulationController.isSimulationAdding ||
+                                    simulationController.isSimulating
+                                ? 0.5
+                                : 1,
                             child: Container(
                                 height: 36,
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(32)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
                                   color: (ColorProvider.isThemeDark(context)
-                                      ? ColorProvider.light
-                                      : ColorProvider.dark)
+                                          ? ColorProvider.light
+                                          : ColorProvider.dark)
                                       .withOpacity(0.24),
                                 ),
                                 alignment: Alignment.center,
@@ -214,23 +237,31 @@ class _PerceptronSimulationScreenState
                         ),
                         InkWell(
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(32)),
+                              const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.perceptronTrainEpoch(epochs: 5);
+                            if (simulationController.perceptron == null) return;
+                            if (simulationController.isSimulationPlaying ||
+                                simulationController.isSimulationAdding ||
+                                simulationController.isSimulating) return;
+                            simulationController.perceptronTrainEpoch(
+                                epochs: 5);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying ||
+                                    simulationController.isSimulationAdding ||
+                                    simulationController.isSimulating
+                                ? 0.5
+                                : 1,
                             child: Container(
                                 height: 36,
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(32)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
                                   color: (ColorProvider.isThemeDark(context)
-                                      ? ColorProvider.light
-                                      : ColorProvider.dark)
+                                          ? ColorProvider.light
+                                          : ColorProvider.dark)
                                       .withOpacity(0.24),
                                 ),
                                 alignment: Alignment.center,
@@ -239,23 +270,31 @@ class _PerceptronSimulationScreenState
                         ),
                         InkWell(
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(32)),
+                              const BorderRadius.all(Radius.circular(32)),
                           onTap: () {
-                            if(simulationController.perceptron == null) return;
-                            if(simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating) return;
-                            simulationController.perceptronTrainEpoch(epochs: 25);
+                            if (simulationController.perceptron == null) return;
+                            if (simulationController.isSimulationPlaying ||
+                                simulationController.isSimulationAdding ||
+                                simulationController.isSimulating) return;
+                            simulationController.perceptronTrainEpoch(
+                                epochs: 25);
                           },
                           child: Opacity(
-                            opacity: simulationController.isSimulationPlaying || simulationController.isSimulationAdding || simulationController.isSimulating ? 0.5 : 1,
+                            opacity: simulationController.isSimulationPlaying ||
+                                    simulationController.isSimulationAdding ||
+                                    simulationController.isSimulating
+                                ? 0.5
+                                : 1,
                             child: Container(
                                 height: 36,
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(32)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
                                   color: (ColorProvider.isThemeDark(context)
-                                      ? ColorProvider.light
-                                      : ColorProvider.dark)
+                                          ? ColorProvider.light
+                                          : ColorProvider.dark)
                                       .withOpacity(0.24),
                                 ),
                                 alignment: Alignment.center,
@@ -265,7 +304,188 @@ class _PerceptronSimulationScreenState
                       ],
                     ),
                   ),
-                  GetBuilder<SimulationController>(builder: (_) => Text(simulationController.perceptron.toString()),),
+                  GetBuilder<SimulationController>(
+                    builder: (_) {
+                      return Column(
+                        children: [
+                          // Text(simulationController.perceptron.toString()),
+                          Container(
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                              color: (ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark)
+                                  .withOpacity(0.16),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 4),
+                            margin: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  "Training error",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                if (simulationController.perceptron!
+                                    .errorCharPointsTraining.isNotEmpty)
+                                  IgnorePointer(
+                                    child: Container(
+                                      width: size.width,
+                                      height: size.width * 0.8,
+                                      alignment: Alignment.center,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(32)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 12, right: 32, bottom: 12),
+                                          child: LineChart(
+                                            LineChartData(
+                                              titlesData: FlTitlesData(
+                                                rightTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                  ),
+                                                ),
+                                                topTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                  ),
+                                                ),
+                                                bottomTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                    interval: 1,
+                                                  ),
+                                                ),
+                                                leftTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: true,
+                                                    reservedSize: 36,
+                                                  ),
+                                                ),
+                                              ),
+                                              gridData: FlGridData(
+                                                show: true,
+                                                verticalInterval: 1,
+                                                getDrawingVerticalLine:
+                                                    (value) {
+                                                  return FlLine(
+                                                    color: (ColorProvider
+                                                                .isThemeDark(
+                                                                    context)
+                                                            ? ColorProvider
+                                                                .light
+                                                            : ColorProvider
+                                                                .dark)
+                                                        .withOpacity(0.48),
+                                                    strokeWidth: 1.6,
+                                                  );
+                                                },
+                                                getDrawingHorizontalLine:
+                                                    (value) {
+                                                  return FlLine(
+                                                    color: (ColorProvider
+                                                                .isThemeDark(
+                                                                    context)
+                                                            ? ColorProvider
+                                                                .light
+                                                            : ColorProvider
+                                                                .dark)
+                                                        .withOpacity(0.36),
+                                                    strokeWidth: 1.6,
+                                                  );
+                                                },
+                                              ),
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              lineBarsData: [
+                                                LineChartBarData(
+                                                  barWidth: 6,
+                                                  dotData: FlDotData(
+                                                    show: false,
+                                                  ),
+                                                  spots: simulationController
+                                                      .perceptron!
+                                                      .errorCharPointsTraining,
+                                                  gradient: LinearGradient(
+                                                      colors: ColorProvider
+                                                              .isThemeDark()
+                                                          ? [
+                                                              ColorProvider
+                                                                  .blueDark,
+                                                              ColorProvider
+                                                                  .greenDark
+                                                            ]
+                                                          : [
+                                                              ColorProvider
+                                                                  .blueLight,
+                                                              ColorProvider
+                                                                  .greenLight
+                                                            ],
+                                                      begin:
+                                                          const FractionalOffset(
+                                                              0.0, 0.0),
+                                                      end:
+                                                          const FractionalOffset(
+                                                              0.5, 0.0),
+                                                      stops: const [0.0, 1.0],
+                                                      tileMode: TileMode.clamp),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Container(
+                                    width: size.width,
+                                    height: size.width * 0.8 - 16,
+                                    margin: const EdgeInsets.all(8),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                      color: (ColorProvider.isThemeDark(context)
+                                          ? ColorProvider.dark
+                                          : ColorProvider.light)
+                                          .withOpacity(0.48),
+                                    ),
+                                    child: const Text(
+                                      "There is not enough data to create a chart",
+                                      style: TextStyle(fontSize: 24), textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      "Steps: ${simulationController.perceptron!.errorCharPointsTraining.length}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "Epoch: ${simulationController.perceptron!.epoch}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "Error: ${simulationController.perceptron!.lastErrorTraining.toStringAsFixed(10)}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

@@ -648,7 +648,7 @@ class SimulationController extends GetxController {
       debugPrint("simulation started");
 
       int milliseconds =
-          simulationSpeed == 0 ? 0 : largeDelay ~/ simulationSpeed;
+          simulationSpeed == 0 ? 0 : mediumDelay.toInt();
 
       await _perceptron.value!
           .train(delay: Duration(milliseconds: milliseconds));
