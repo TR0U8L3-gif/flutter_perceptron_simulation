@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: routeController.getMainRoute,
       getPages: routeController.routes,
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }

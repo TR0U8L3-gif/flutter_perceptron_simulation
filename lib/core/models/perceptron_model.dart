@@ -48,9 +48,10 @@ class Perceptron{
       }
 
       output = Output(name: "output", value: 0);
-    } else {
+    }
+    else {
       for (String name in inputNames) {
-        inputs.add(Input(name: name, value: 0));
+        inputs.add(Input(name: name.trimLeft().trimRight(), value: 0));
       }
       output = Output(name: outputName, value: 0);
     }
