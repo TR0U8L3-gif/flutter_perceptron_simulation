@@ -303,14 +303,14 @@ class Perceptron{
   String print() {
     String result = "Perceptron\n";
     for(Input input in inputs){
-      result += "Input[${input.name}]: ${input.value}\n";
+      result += "Input[${input.name}]: ${input.value.toStringAsFixed(2)}\n";
     }
     for(int i = 0; i < weights.length; i++){
-      result += "Weight[${i+1}]: ${weights[i]}\n";
+      result += "Weight[${i+1}]: ${weights[i].toStringAsFixed(8)}\n";
     }
     result += "Activation function: ${activationFunction.name}\n";
     if(output != null){
-      result += "Output[${output!.name}]: ${output!.value}\n";
+      result += "Output[${output!.name}]: ${output!.value.toStringAsFixed(8)}";
     }
     return result;
   }

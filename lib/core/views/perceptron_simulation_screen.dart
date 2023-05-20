@@ -17,6 +17,7 @@ class PerceptronSimulationScreen extends StatefulWidget {
 class _PerceptronSimulationScreenState
     extends State<PerceptronSimulationScreen> {
   final SimulationController simulationController = Get.find();
+  bool isAnimationView = true;
 
   @override
   void initState() {
@@ -41,6 +42,9 @@ class _PerceptronSimulationScreenState
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 32,
+                  ),
                   Opacity(
                     opacity: simulationController.isSimulationAdding ? 0.5 : 1,
                     child: Row(
@@ -194,7 +198,7 @@ class _PerceptronSimulationScreenState
                     ],
                   ),
                   const SizedBox(
-                    height: 32,
+                    height: 16,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -308,7 +312,81 @@ class _PerceptronSimulationScreenState
                     builder: (_) {
                       return Column(
                         children: [
-                          Text(simulationController.perceptron!.print()),
+                          const SizedBox(height: 4,),
+                          AnimatedContainer(
+                              width: size.width,
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(16)),
+                                color: (ColorProvider.isThemeDark(context)
+                                    ? ColorProvider.light
+                                    : ColorProvider.dark)
+                                    .withOpacity(0.16),
+                              ),
+                              duration: duration600,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        InkWell(
+                                          borderRadius:
+                                          const BorderRadius.all(Radius.circular(32)),
+                                          onTap: () => setState(() {
+                                            isAnimationView = true;
+                                          }),
+                                          child: Container(
+                                              height: 24,
+                                              padding:
+                                              const EdgeInsets.symmetric(horizontal: 12),
+                                              decoration: BoxDecoration(
+                                                borderRadius: const BorderRadius.all(
+                                                    Radius.circular(32)),
+                                                color: (ColorProvider.isThemeDark(context)
+                                                    ? ColorProvider.light
+                                                    : ColorProvider.dark)
+                                                    .withOpacity(isAnimationView ? 0.24 : 0),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: const Text("animation view")),
+                                        ),
+                                        InkWell(
+                                          borderRadius:
+                                          const BorderRadius.all(Radius.circular(32)),
+                                          onTap: () => setState(() {
+                                            isAnimationView = false;
+                                          }),
+                                          child: Container(
+                                              height: 24,
+                                              padding:
+                                              const EdgeInsets.symmetric(horizontal: 12),
+                                              decoration: BoxDecoration(
+                                                borderRadius: const BorderRadius.all(
+                                                    Radius.circular(32)),
+                                                color: (ColorProvider.isThemeDark(context)
+                                                    ? ColorProvider.light
+                                                    : ColorProvider.dark)
+                                                    .withOpacity(isAnimationView ? 0 : 0.24),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: const Text("raw data view")),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  AnimatedCrossFade(
+                                      firstChild: SizedBox(),
+                                      secondChild: Text(simulationController.perceptron!.print(),textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
+                                      crossFadeState: isAnimationView ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      duration: duration600)
+                                ],
+                              )),
+                          const SizedBox(height: 4,),
                           Container(
                             width: size.width,
                             decoration: BoxDecoration(
