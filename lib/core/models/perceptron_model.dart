@@ -26,14 +26,14 @@ class Perceptron{
   List<List<double>> testingInputData = [];
 
   //simulation
-  List<FlSpot> errorCharPointsTraining = [];
-  List<FlSpot> errorCharPointsTesting = [];
+  List<FlSpot> errorChartPointsTraining = [];
+  List<FlSpot> errorChartPointsTesting = [];
   double percentageOfCorrectAnswers = 0;
   int epoch = 0;
   bool isInitialized = false;
 
-  double get lastErrorTraining => errorCharPointsTraining.isNotEmpty ? errorCharPointsTraining[errorCharPointsTraining.length-1].y : 0;
-  double get lastErrorTesting => errorCharPointsTesting.isNotEmpty ? errorCharPointsTesting[errorCharPointsTesting.length-1].y : 0;
+  double get lastErrorTraining => errorChartPointsTraining.isNotEmpty ? errorChartPointsTraining[errorChartPointsTraining.length-1].y : 0;
+  double get lastErrorTesting => errorChartPointsTesting.isNotEmpty ? errorChartPointsTesting[errorChartPointsTesting.length-1].y : 0;
   //init
   Perceptron(
       {required this.inputsNumber,
@@ -172,6 +172,7 @@ class Perceptron{
       error = correctOutput - predictedOutput;
       updateWeightsAndBias(error: error, inputs: correctInputs);
       addChartErrorPointTraining(error * error);
+      test();
 
       //update view
       output!.value = predictedOutput;
@@ -179,7 +180,6 @@ class Perceptron{
       for(int index = 0; index < inputsNumber; index++){
         inputs[index].value = correctInputs[index];
       }
-      test();
 
       Get.find<SimulationController>().updateSimulation();
       await Future.delayed(Duration(milliseconds: Get.find<SimulationController>().simulationSpeed == 0 ? 0 : delay.inMilliseconds ~/  Get.find<SimulationController>().simulationSpeed * 2));
@@ -208,6 +208,7 @@ class Perceptron{
       error = correctOutput - predictedOutput;
       updateWeightsAndBias(error: error, inputs: correctInputs);
       addChartErrorPointTraining(error * error);
+      test();
     }
 
     //visual update
@@ -217,7 +218,6 @@ class Perceptron{
     for(int index = 0; index < inputsNumber; index++){
       inputs[index].value = correctInputs[index];
     }
-    test();
   }
 
   double predict(List<double> input) {
@@ -249,21 +249,21 @@ class Perceptron{
 
   //visualization
   void addChartErrorPointTraining(double globalError) {
-    int length = errorCharPointsTraining.length;
-    errorCharPointsTraining.add(FlSpot(length + 1, globalError));
+    int length = errorChartPointsTraining.length;
+    errorChartPointsTraining.add(FlSpot(length + 1, globalError));
   }
 
   void addChartErrorPointTesting(double globalError) {
-    int length = errorCharPointsTesting.length;
-    errorCharPointsTesting.add(FlSpot(length + 1, globalError));
+    int length = errorChartPointsTesting.length;
+    errorChartPointsTesting.add(FlSpot(length + 1, globalError));
   }
 
   void resetData(){
     weights = [];
     bias = 0.0;
     epoch = 0;
-    errorCharPointsTraining = [];
-    errorCharPointsTesting= [];
+    errorChartPointsTraining = [];
+    errorChartPointsTesting= [];
     percentageOfCorrectAnswers = 0;
     for(Input input in inputs){
       input.value = 0;
@@ -288,15 +288,30 @@ class Perceptron{
     if(output != null){
       result += "Output[${output!.name}]: ${output!.value}\n";
     }
-    result += "Steps: ${errorCharPointsTraining.length}\n";
+    result += "Steps: ${errorChartPointsTraining.length}\n";
     result += "Epoch: $epoch\n";
-    result += "Global error: ${errorCharPointsTraining.isEmpty ? "null" : errorCharPointsTraining[errorCharPointsTraining.length-1]}\n";
-    result += "Testing error: ${errorCharPointsTesting.isEmpty ? "null" : errorCharPointsTesting[errorCharPointsTesting.length-1]}\n";
+    result += "Global error: ${errorChartPointsTraining.isEmpty ? "null" : errorChartPointsTraining[errorChartPointsTraining.length-1]}\n";
+    result += "Testing error: ${errorChartPointsTesting.isEmpty ? "null" : errorChartPointsTesting[errorChartPointsTesting.length-1]}\n";
     result += "Percentage: $percentageOfCorrectAnswers\n";
     result += "trainingInput: ${trainingInputData.length}\n";
     result += "trainingOutput: ${trainingOutputData.length}\n";
     result += "testingInput: ${testingInputData.length}\n";
     result += "testingOutput: ${testingOutputData.length}\n";
+    return result;
+  }
+
+  String print() {
+    String result = "Perceptron\n";
+    for(Input input in inputs){
+      result += "Input[${input.name}]: ${input.value}\n";
+    }
+    for(int i = 0; i < weights.length; i++){
+      result += "Weight[${i+1}]: ${weights[i]}\n";
+    }
+    result += "Activation function: ${activationFunction.name}\n";
+    if(output != null){
+      result += "Output[${output!.name}]: ${output!.value}\n";
+    }
     return result;
   }
 

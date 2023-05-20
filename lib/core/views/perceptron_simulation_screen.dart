@@ -308,7 +308,22 @@ class _PerceptronSimulationScreenState
                     builder: (_) {
                       return Column(
                         children: [
-                          // Text(simulationController.perceptron.toString()),
+                          Text(simulationController.perceptron!.print()),
+                          Container(
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(32)),
+                              color: (ColorProvider.isThemeDark(context)
+                                  ? ColorProvider.light
+                                  : ColorProvider.dark)
+                                  .withOpacity(0.32),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Text("Percentage of correctly identified\n test examples: ${simulationController.perceptron!.percentageOfCorrectAnswers.toStringAsFixed(2)}%", maxLines: 2, style: const TextStyle(fontSize: 18), textAlign: TextAlign.center,),
+                          ),
                           Container(
                             width: size.width,
                             decoration: BoxDecoration(
@@ -320,7 +335,7 @@ class _PerceptronSimulationScreenState
                                   .withOpacity(0.16),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 4),
+                                vertical: 8, horizontal: 8),
                             margin: const EdgeInsets.all(8),
                             child: Column(
                               children: [
@@ -329,12 +344,22 @@ class _PerceptronSimulationScreenState
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 if (simulationController.perceptron!
-                                    .errorCharPointsTraining.isNotEmpty)
+                                    .errorChartPointsTraining.isNotEmpty)
                                   IgnorePointer(
                                     child: Container(
                                       width: size.width,
                                       height: size.width * 0.8,
                                       alignment: Alignment.center,
+                                      margin: const EdgeInsets.symmetric(vertical: 4),
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                        const BorderRadius.all(Radius.circular(16)),
+                                        color: (ColorProvider.isThemeDark(context)
+                                            ? ColorProvider.dark
+                                            : ColorProvider.light)
+                                            .withOpacity(0.48),
+                                      ),
                                       child: ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(32)),
@@ -343,6 +368,8 @@ class _PerceptronSimulationScreenState
                                               top: 12, right: 32, bottom: 12),
                                           child: LineChart(
                                             LineChartData(
+                                              minY: 0,
+                                              maxY: 1,
                                               titlesData: FlTitlesData(
                                                 rightTitles: AxisTitles(
                                                   sideTitles: SideTitles(
@@ -362,13 +389,14 @@ class _PerceptronSimulationScreenState
                                                 ),
                                                 leftTitles: AxisTitles(
                                                   sideTitles: SideTitles(
+                                                    interval: 0.1,
                                                     showTitles: true,
                                                     reservedSize: 36,
                                                   ),
                                                 ),
                                               ),
                                               gridData: FlGridData(
-                                                show: true,
+                                                show: false,
                                                 verticalInterval: 1,
                                                 getDrawingVerticalLine:
                                                     (value) {
@@ -410,7 +438,7 @@ class _PerceptronSimulationScreenState
                                                   ),
                                                   spots: simulationController
                                                       .perceptron!
-                                                      .errorCharPointsTraining,
+                                                      .errorChartPointsTraining,
                                                   gradient: LinearGradient(
                                                       colors: ColorProvider
                                                               .isThemeDark()
@@ -466,7 +494,7 @@ class _PerceptronSimulationScreenState
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      "Steps: ${simulationController.perceptron!.errorCharPointsTraining.length}",
+                                      "Steps: ${simulationController.perceptron!.errorChartPointsTraining.length}",
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     Text(
@@ -475,6 +503,192 @@ class _PerceptronSimulationScreenState
                                     ),
                                     Text(
                                       "Error: ${simulationController.perceptron!.lastErrorTraining.toStringAsFixed(10)}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(32)),
+                              color: (ColorProvider.isThemeDark(context)
+                                  ? ColorProvider.light
+                                  : ColorProvider.dark)
+                                  .withOpacity(0.16),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            margin: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  "Testing error",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                if (simulationController.perceptron!
+                                    .errorChartPointsTesting.isNotEmpty)
+                                  IgnorePointer(
+                                    child: Container(
+                                      width: size.width,
+                                      height: size.width * 0.8,
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.symmetric(vertical: 4),
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                        const BorderRadius.all(Radius.circular(16)),
+                                        color: (ColorProvider.isThemeDark(context)
+                                            ? ColorProvider.dark
+                                            : ColorProvider.light)
+                                            .withOpacity(0.48),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(32)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 12, right: 32, bottom: 12),
+                                          child: LineChart(
+                                            LineChartData(
+                                              minY: 0,
+                                              maxY: 1,
+                                              titlesData: FlTitlesData(
+                                                rightTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                  ),
+                                                ),
+                                                topTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                  ),
+                                                ),
+                                                bottomTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    showTitles: false,
+                                                    interval: 1,
+                                                  ),
+                                                ),
+                                                leftTitles: AxisTitles(
+                                                  sideTitles: SideTitles(
+                                                    interval: 0.1,
+                                                    showTitles: true,
+                                                    reservedSize: 36,
+                                                  ),
+                                                ),
+                                              ),
+                                              gridData: FlGridData(
+                                                show: false,
+                                                verticalInterval: 1,
+                                                getDrawingVerticalLine:
+                                                    (value) {
+                                                  return FlLine(
+                                                    color: (ColorProvider
+                                                        .isThemeDark(
+                                                        context)
+                                                        ? ColorProvider
+                                                        .light
+                                                        : ColorProvider
+                                                        .dark)
+                                                        .withOpacity(0.48),
+                                                    strokeWidth: 1.6,
+                                                  );
+                                                },
+                                                getDrawingHorizontalLine:
+                                                    (value) {
+                                                  return FlLine(
+                                                    color: (ColorProvider
+                                                        .isThemeDark(
+                                                        context)
+                                                        ? ColorProvider
+                                                        .light
+                                                        : ColorProvider
+                                                        .dark)
+                                                        .withOpacity(0.36),
+                                                    strokeWidth: 1.6,
+                                                  );
+                                                },
+                                              ),
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              lineBarsData: [
+                                                LineChartBarData(
+                                                  barWidth: 6,
+                                                  dotData: FlDotData(
+                                                    show: false,
+                                                  ),
+                                                  spots: simulationController
+                                                      .perceptron!
+                                                      .errorChartPointsTesting,
+                                                  gradient: LinearGradient(
+                                                      colors: ColorProvider
+                                                          .isThemeDark()
+                                                          ? [
+                                                        ColorProvider
+                                                            .blueDark,
+                                                        ColorProvider
+                                                            .greenDark
+                                                      ]
+                                                          : [
+                                                        ColorProvider
+                                                            .blueLight,
+                                                        ColorProvider
+                                                            .greenLight
+                                                      ],
+                                                      begin:
+                                                      const FractionalOffset(
+                                                          0.0, 0.0),
+                                                      end:
+                                                      const FractionalOffset(
+                                                          0.5, 0.0),
+                                                      stops: const [0.0, 1.0],
+                                                      tileMode: TileMode.clamp),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Container(
+                                    width: size.width,
+                                    height: size.width * 0.8 - 16,
+                                    margin: const EdgeInsets.all(8),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                      color: (ColorProvider.isThemeDark(context)
+                                          ? ColorProvider.dark
+                                          : ColorProvider.light)
+                                          .withOpacity(0.48),
+                                    ),
+                                    child: const Text(
+                                      "There is not enough data to create a chart",
+                                      style: TextStyle(fontSize: 24), textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      "Steps: ${simulationController.perceptron!.errorChartPointsTesting.length}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "Epoch: ${simulationController.perceptron!.epoch}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "Error: ${simulationController.perceptron!.lastErrorTesting.toStringAsFixed(10)}",
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                   ],
