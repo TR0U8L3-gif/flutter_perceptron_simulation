@@ -836,6 +836,29 @@ class _PerceptronSimulationScreenState
                               style: const TextStyle(fontSize: 18),
                               textAlign: TextAlign.center,),
                           ),
+                          InkWell(
+                            onTap: () => simulationController.predictOutput(),
+                            borderRadius: const BorderRadius.all(Radius.circular(32)),
+                            child: Container(
+                              width: size.width * 0.6,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(32)),
+                                color: (ColorProvider.isThemeDark(context)
+                                    ? ColorProvider.yellowDark
+                                    : ColorProvider.yellowLight)
+                                    .withOpacity(0.32),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 8),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: const Text(
+                                "Predict Output",
+                                style: TextStyle(fontSize: 18),
+                                textAlign: TextAlign.center,),
+                            ),
+                          ),
                           Container(
                             width: size.width,
                             decoration: BoxDecoration(
@@ -1235,7 +1258,7 @@ class _PerceptronSimulationScreenState
                                 simulationController.cancel();
                                 Get.offAllNamed(routeController.getMainRoute);
                               },
-                              child: AnimatedContainer(
+                              child: Container(
                                 width: (size.width - min(size.width, size.height) * 0.2),
                                 height: 48,
                                 decoration: BoxDecoration(
@@ -1246,7 +1269,6 @@ class _PerceptronSimulationScreenState
                                       : ColorProvider.dark,
                                 ),
                                 alignment: Alignment.center,
-                                duration: duration600,
                                 child: Text(
                                   "Exit",
                                   style: TextStyle(

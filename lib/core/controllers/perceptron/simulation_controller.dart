@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:perceptron_simulation/core/models/activation_function_model.dart';
 import 'package:perceptron_simulation/tools/utils/constants.dart';
 import 'package:perceptron_simulation/core/models/perceptron_model.dart';
+import 'package:perceptron_simulation/tools/utils/theme_provider.dart';
 
 class SimulationController extends GetxController {
   //init
@@ -657,6 +658,164 @@ class SimulationController extends GetxController {
       debugPrint("simulation ended");
       update();
     }
+  }
+
+  void predictOutput() {
+    if(_perceptron.value == null) return;
+
+    List<double> inputValues = List.filled(_perceptron.value!.inputsNumber, 0);
+
+    Get.defaultDialog(
+
+        title: "Predict Output",
+        content: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            borderRadius:
+            BorderRadius.all(Radius.circular(16)),
+          ),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                children: [
+                  Container(
+                    height: 120,
+                    width: Get.width,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                      const BorderRadius.all(Radius.circular(16)),
+                      color: (ColorProvider.isThemeDark()
+                          ? ColorProvider.light
+                          : ColorProvider.dark)
+                          .withOpacity(0.16),
+                    ),
+                    alignment: Alignment.center,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      child: ListView.builder(
+                          itemCount: _perceptron.value!.inputsNumber,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: TextFormField(
+                                onChanged: (value) {
+                                  if(value.isEmpty){
+                                    setState((){
+                                      inputValues[index] = 0;
+                                    });
+                                    return;
+                                  }
+
+                                  double? number;
+                                  try{
+                                    number = double.parse(value);
+                                  } catch (e) {
+                                    number = null;
+                                  }
+
+                                  if(number != null){
+                                    setState((){
+                                      inputValues[index] = number!;
+                                    });
+                                  }
+                                },
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                                    ),
+                                    labelText: _perceptron.value!.inputs[index].name,
+                                    hintText: "input ${_perceptron.value!.inputs[index].name} value "
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                  const SizedBox(height: 16,),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                      const BorderRadius.all(Radius.circular(16)),
+                      color: (ColorProvider.isThemeDark(context)
+                          ? ColorProvider.yellowDark
+                          : ColorProvider.yellowLight)
+                          .withOpacity(0.32),
+                    ),
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Text("${_perceptron.value!.inputs.map((input) => input.name).toList()}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 12,),),
+                        const SizedBox(height: 2,),
+                        Text("$inputValues", textAlign: TextAlign.center, style: const TextStyle(fontSize: 16,),),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8,),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                      const BorderRadius.all(Radius.circular(16)),
+                      color: (ColorProvider.isThemeDark(context)
+                          ? ColorProvider.yellowDark
+                          : ColorProvider.yellowLight)
+                          .withOpacity(0.64),
+                    ),
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Text(_perceptron.value!.output!.name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                        const SizedBox(height: 4,),
+                        const Text("predicted output:",),
+                        const SizedBox(height: 2,),
+                        Text("${_perceptron.value!.predict(inputValues).toStringAsFixed(8)} (${_perceptron.value!.stringOutputs[_perceptron.value!.predict(inputValues).round()]})", textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        const SizedBox(height: 4,),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          )
+        ),
+        cancel: Column(
+          children: [
+            InkWell(
+              onTap: () => Get.back(),
+              child: Container(
+                height: 36,
+                width: Get.width * 0.6,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                      Radius.circular(32)),
+                  color: ColorProvider.isThemeDark()
+                      ? ColorProvider.light
+                      : ColorProvider.dark,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    color: ColorProvider.isThemeDark()
+                        ? ColorProvider.yellowDark
+                        : ColorProvider.yellowLight,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4,),
+          ],
+        ),
+        backgroundColor: (ColorProvider.isThemeDark()
+            ? ColorProvider.dark
+            : ColorProvider.light),
+        radius: 30
+    );
   }
 
 }
