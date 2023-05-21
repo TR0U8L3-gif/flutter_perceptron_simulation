@@ -18,6 +18,14 @@ class Perceptron{
   List<double> weights = [];
   double bias = 0.0;
 
+  double get weightSum {
+    double weightSum = 0;
+    for(int index = 0; index < inputsNumber; index++){
+      weightSum += inputs[index].value * weights[index];
+    }
+    return weightSum;
+  }
+
   //data
   Map<double, String> stringOutputs = {};
   List<double> trainingOutputData = [];
@@ -34,6 +42,7 @@ class Perceptron{
 
   double get lastErrorTraining => errorChartPointsTraining.isNotEmpty ? errorChartPointsTraining[errorChartPointsTraining.length-1].y : 0;
   double get lastErrorTesting => errorChartPointsTesting.isNotEmpty ? errorChartPointsTesting[errorChartPointsTesting.length-1].y : 0;
+
   //init
   Perceptron(
       {required this.inputsNumber,
@@ -53,7 +62,7 @@ class Perceptron{
       for (String name in inputNames) {
         inputs.add(Input(name: name.trimLeft().trimRight(), value: 0));
       }
-      output = Output(name: outputName, value: 0);
+      output = Output(name: outputName.trimLeft().trimRight(), value: 0);
     }
     resetData();
   }
@@ -309,9 +318,11 @@ class Perceptron{
     for(int i = 0; i < weights.length; i++){
       result += "Weight[${i+1}]: ${weights[i].toStringAsFixed(8)}\n";
     }
+    result+= "WeightSum: $weightSum\n";
     result += "Activation function: ${activationFunction.name}\n";
     if(output != null){
-      result += "Output[${output!.name}]: ${output!.value.toStringAsFixed(8)}";
+      result += "Output[${output!.name}]: ${ output!.value.toStringAsFixed(6)} (${stringOutputs[output!.value.round()]})\n";
+      result += "Correct Output: ${output!.correctValue == null ? "no data" : output!.correctValue!.toStringAsFixed(6)} (${output!.correctValue == null ? "no data" : stringOutputs[output!.correctValue!.round()]})";
     }
     return result;
   }

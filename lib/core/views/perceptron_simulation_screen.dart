@@ -63,6 +63,7 @@ class _PerceptronSimulationScreenState
     return Obx(() {
       return WillPopScope(
         onWillPop: () async {
+          simulationController.cancel();
           Get.toNamed(routeController.getMainRoute);
           return false;
         },
@@ -511,29 +512,73 @@ class _PerceptronSimulationScreenState
                                                                     ),
                                                                     alignment: Alignment.center,
                                                                     child: Text(simulationController.perceptron!.weights[index].toStringAsFixed(4), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
-
                                                                   ),
                                                                   ShaderMask(
                                                                     blendMode: BlendMode.color,
                                                                     shaderCallback: (rect) => LinearGradient(
-                                                                        stops: const [
-                                                                          0.4,
-                                                                          1
-                                                                        ],
                                                                         colors: [
                                                                           getColor(simulationController.perceptron!.weights[index]),
                                                                           getColor(simulationController.perceptron!.weights[index]),
                                                                         ]
                                                                     ).createShader(rect),
-                                                                    child: Container(
-                                                                      width: 32,
-                                                                      height: 8,
-                                                                      color: (ColorProvider.isThemeDark(context)
-                                                                          ? ColorProvider.light
-                                                                          : ColorProvider.dark)
-                                                                          .withOpacity(0.16),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          width: 32,
+                                                                          height: 8,
+                                                                          color: (ColorProvider.isThemeDark(context)
+                                                                              ? ColorProvider.light
+                                                                              : ColorProvider.dark)
+                                                                              .withOpacity(0.16),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ),
+                                                                  const SizedBox(width: 4,),
+                                                                  ShaderMask(
+                                                                    blendMode: BlendMode.color,
+                                                                    shaderCallback: (rect) => LinearGradient(
+                                                                        colors: [
+                                                                          getColor(simulationController.perceptron!.weights[index]),
+                                                                          getColor(simulationController.perceptron!.weights[index]),
+                                                                        ]
+                                                                    ).createShader(rect),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          width: 8,
+                                                                          height: 8,
+                                                                          color: (ColorProvider.isThemeDark(context)
+                                                                              ? ColorProvider.light
+                                                                              : ColorProvider.dark)
+                                                                              .withOpacity(0.16),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 4,),
+                                                                  ShaderMask(
+                                                                    blendMode: BlendMode.color,
+                                                                    shaderCallback: (rect) => LinearGradient(
+                                                                        colors: [
+                                                                          getColor(simulationController.perceptron!.weights[index]),
+                                                                          getColor(simulationController.perceptron!.weights[index]),
+                                                                        ]
+                                                                    ).createShader(rect),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          width: 4,
+                                                                          height: 8,
+                                                                          color: (ColorProvider.isThemeDark(context)
+                                                                              ? ColorProvider.light
+                                                                              : ColorProvider.dark)
+                                                                              .withOpacity(0.16),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 8,),
                                                                 ],
                                                               )
                                                             );
@@ -541,63 +586,228 @@ class _PerceptronSimulationScreenState
                                                     ),
                                                   ),
                                                 ),
-                                                Container(
-                                                  height: 8,
-                                                  width: 32,
-                                                  color: (ColorProvider.isThemeDark(context)
-                                                      ? ColorProvider.light
-                                                      : ColorProvider.dark)
-                                                      .withOpacity(0.16),
 
+                                                ShaderMask(
+                                                  blendMode: BlendMode.color,
+                                                  shaderCallback: (rect) => LinearGradient(
+                                                      colors: [
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                      ]
+                                                  ).createShader(rect),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 4,
+                                                        height: 8,
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.light
+                                                            : ColorProvider.dark)
+                                                            .withOpacity(0.16),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 4,),
+                                                ShaderMask(
+                                                  blendMode: BlendMode.color,
+                                                  shaderCallback: (rect) => LinearGradient(
+                                                      colors: [
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                      ]
+                                                  ).createShader(rect),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 8,
+                                                        height: 8,
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.light
+                                                            : ColorProvider.dark)
+                                                            .withOpacity(0.16),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 4,),
+                                                ShaderMask(
+                                                  blendMode: BlendMode.color,
+                                                  shaderCallback: (rect) => LinearGradient(
+                                                      colors: [
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                      ]
+                                                  ).createShader(rect),
+                                                  child: Container(
+                                                    height: 8,
+                                                    width: 32,
+                                                    color: (ColorProvider.isThemeDark(context)
+                                                        ? ColorProvider.light
+                                                        : ColorProvider.dark)
+                                                        .withOpacity(0.16),
+
+                                                  ),
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const SizedBox(height: 36 + 8,),
+                                                    Container(
+                                                      width: 76,
+                                                      height: 76,
+                                                      padding: const EdgeInsets.all(16),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.yellowDark
+                                                            : ColorProvider.yellowLight)
+                                                            .withOpacity(0.72),
+                                                      ),
+                                                      child: CircleAvatar(
+                                                        backgroundColor: Colors.transparent,
+                                                        child: Image.asset("assets/images/sum_${ColorProvider.isThemeDark(context) ? "light" : "dark"}.png"),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8,),
+                                                    Container(
+                                                      width: 76,
+                                                      height: 36,
+                                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                        const BorderRadius.all(Radius.circular(16)),
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.yellowDark
+                                                            : ColorProvider.yellowLight)
+                                                            .withOpacity(0.32),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Text(simulationController.perceptron!.weightSum.toStringAsFixed(4), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
+                                                    ),
+                                                  ],
+                                                ),
+                                                ShaderMask(
+                                                  blendMode: BlendMode.color,
+                                                  shaderCallback: (rect) => LinearGradient(
+                                                      colors: [
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                        getColor(simulationController.perceptron!.weightSum),
+                                                      ]
+                                                  ).createShader(rect),
+                                                  child: Container(
+                                                    height: 8,
+                                                    width: 32,
+                                                    color: (ColorProvider.isThemeDark(context)
+                                                        ? ColorProvider.light
+                                                        : ColorProvider.dark)
+                                                        .withOpacity(0.16),
+
+                                                  ),
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const SizedBox(height: 36 + 8,),
+                                                    Container(
+                                                      width: 112,
+                                                      padding: const EdgeInsets.all(12),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: const BorderRadius.all(Radius.circular(16)),
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.yellowDark
+                                                            : ColorProvider.yellowLight)
+                                                            .withOpacity(0.72),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Text(simulationController.perceptron!.activationFunction.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                                    ),
+                                                    const SizedBox(height: 8,),
+                                                    Container(
+                                                      width: 76,
+                                                      height: 36,
+                                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                        const BorderRadius.all(Radius.circular(16)),
+                                                        color: (ColorProvider.isThemeDark(context)
+                                                            ? ColorProvider.yellowDark
+                                                            : ColorProvider.yellowLight)
+                                                            .withOpacity(0.32),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Text(simulationController.perceptron!.activationFunction.calculate(simulationController.perceptron!.weightSum).toStringAsFixed(4), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
+                                                    ),
+                                                  ],
+                                                ),
+                                                ShaderMask(
+                                                  blendMode: BlendMode.color,
+                                                  shaderCallback: (rect) => LinearGradient(
+                                                      colors: [
+                                                        getColor(simulationController.perceptron!.output!.value),
+                                                        getColor(simulationController.perceptron!.output!.value),
+                                                      ]
+                                                  ).createShader(rect),
+                                                  child: Container(
+                                                    height: 8,
+                                                    width: 32,
+                                                    color: (ColorProvider.isThemeDark(context)
+                                                        ? ColorProvider.light
+                                                        : ColorProvider.dark)
+                                                        .withOpacity(0.16),
+
+                                                  ),
                                                 ),
                                                 Container(
-                                                  width: 76,
-                                                  height: 76,
-                                                  padding: const EdgeInsets.all(16),
+                                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                                                   decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
+                                                    borderRadius:
+                                                    const BorderRadius.all(Radius.circular(32)),
                                                     color: (ColorProvider.isThemeDark(context)
                                                         ? ColorProvider.yellowDark
                                                         : ColorProvider.yellowLight)
-                                                        .withOpacity(0.72),
-                                                  ),
-                                                  child: CircleAvatar(
-                                                    backgroundColor: Colors.transparent,
-                                                    child: Image.asset("assets/images/sum_${ColorProvider.isThemeDark(context) ? "light" : "dark"}.png"),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 8,
-                                                  width: 32,
-                                                  color: (ColorProvider.isThemeDark(context)
-                                                      ? ColorProvider.light
-                                                      : ColorProvider.dark)
-                                                      .withOpacity(0.16),
-
-                                                ),
-                                                Container(
-                                                  width: 112,
-                                                  padding: const EdgeInsets.all(12),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: const BorderRadius.all(Radius.circular(16)),
-                                                    color: (ColorProvider.isThemeDark(context)
-                                                        ? ColorProvider.yellowDark
-                                                        : ColorProvider.yellowLight)
-                                                        .withOpacity(0.72),
+                                                        .withOpacity(0.64),
                                                   ),
                                                   alignment: Alignment.center,
-                                                  child: Text(simulationController.perceptron!.activationFunction.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                                  child: Column(
+                                                    children: [
+                                                      Text(simulationController.perceptron!.output!.name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                                      const SizedBox(height: 8,),
+                                                      const Text("predicted output:",),
+                                                      const SizedBox(height: 2,),
+                                                      Text(simulationController.perceptron!.output!.value.toStringAsFixed(4), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                                                      Text("(${simulationController.perceptron!.stringOutputs[simulationController.perceptron!.output!.value.round()]})", textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
+                                                      const SizedBox(height: 16,),
+                                                      const Text("correct output:"),
+                                                      const SizedBox(height: 2,),
+                                                      Text(simulationController.perceptron!.output!.correctValue == null ? "no data" :simulationController.perceptron!.output!.correctValue!.toStringAsFixed(4), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                                                      Text("(${simulationController.perceptron!.output!.correctValue == null ? "no data" :simulationController.perceptron!.stringOutputs[simulationController.perceptron!.output!.correctValue!.round()]})", textAlign: TextAlign.center, style: const TextStyle(fontSize: 16),),
+
+                                                      const SizedBox(height: 4,),
+                                                    ],
+                                                  ),
                                                 ),
+                                                const SizedBox(width: 8,),
                                               ],
                                             ),
                                           ),
                                         ),
                                       ),
-                                      secondChild: Text(
-                                        simulationController.perceptron!
-                                            .print(),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(fontSize: 16),),
+                                      secondChild: Container(
+                                        width: size.width,
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                          const BorderRadius.all(Radius.circular(16)),
+                                          color: (ColorProvider.isThemeDark(context)
+                                              ? ColorProvider.light
+                                              : ColorProvider.dark)
+                                              .withOpacity(0.16),
+                                        ),
+                                        child: Text(
+                                          simulationController.perceptron!
+                                              .print(),
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16),),
+                                      ),
                                       crossFadeState: isAnimationView
                                           ? CrossFadeState.showFirst
                                           : CrossFadeState.showSecond,
@@ -1014,6 +1224,40 @@ class _PerceptronSimulationScreenState
                                   ],
                                 )
                               ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                            child: InkWell(
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(32)),
+                              onTap: () {
+                                simulationController.cancel();
+                                Get.offAllNamed(routeController.getMainRoute);
+                              },
+                              child: AnimatedContainer(
+                                width: (size.width - min(size.width, size.height) * 0.2),
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
+                                  color: ColorProvider.isThemeDark(context)
+                                      ? ColorProvider.light
+                                      : ColorProvider.dark,
+                                ),
+                                alignment: Alignment.center,
+                                duration: duration600,
+                                child: Text(
+                                  "Exit",
+                                  style: TextStyle(
+                                    color: ColorProvider.isThemeDark(context)
+                                        ? ColorProvider.yellowDark
+                                        : ColorProvider.yellowLight,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],

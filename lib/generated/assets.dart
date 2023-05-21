@@ -7,6 +7,6 @@ class Assets {
   static const String imagesPerceptronDark = 'assets/images/perceptron_dark.png';
   static const String imagesPerceptronLight = 'assets/images/perceptron_light.png';
   static const String imagesSumBlack = 'assets/images/sum_dark.png';
-  static const String imagesSumWhite = 'assets/images/sum_white.png';
+  static const String imagesSumWhite = 'assets/images/sum_light.png';
 
 }
