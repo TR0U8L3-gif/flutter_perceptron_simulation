@@ -31,6 +31,15 @@ After the training process is completed, the application allows testing on test 
 ### Visualization of the results: 
 The application can also provide visualizations of the perceptron training results, such as graphs showing the change in the perceptron weights during training, or graphs presenting the perceptron's effectiveness on test data.
 
+## Source code
+Models (perceptron, activation function, inputs and outputs): [link](https://github.com/TR0U8L3-gif/flutter_perceptron_simulation/tree/main/lib/core/models)
+
+Views (start screen, data loading screen, etc): [link](https://github.com/TR0U8L3-gif/flutter_perceptron_simulation/tree/main/lib/core/views)
+
+Controllers (route management, simulation management): [link](https://github.com/TR0U8L3-gif/flutter_perceptron_simulation/tree/main/lib/core/controllers)
+
+Sample perceptron learning data file: [link](https://github.com/TR0U8L3-gif/flutter_perceptron_simulation/tree/main/assets/data)
+
 ## App appearance:
 ### Main screen:
 <img src="https://github.com/TR0U8L3-gif/flutter_perceptron_simulation/assets/71569327/469ad138-bc56-46d2-90a3-b109c1314548" width="256">
